@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{28a89c83-eda4-4e8f-ad04-c4317eddb7e0}</ProjectGuid>
-    <RootNamespace>Byte_Jumper</RootNamespace>
+    <ProjectGuid>{c25e3ad9-d6a5-45c2-aae1-b2f750b8823c}</ProjectGuid>
+    <RootNamespace>ByteJumper</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -138,7 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <MASM Include="Source Files\Main.asm" />
+    <MASM Include="Source Files\main.asm" />
     <MASM Include="Source Files\readWriteProc.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
