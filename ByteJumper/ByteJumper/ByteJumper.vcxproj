@@ -83,12 +83,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>main</EntryPointSymbol>
       <AdditionalDependencies>Irvine32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Aaron\Documents\Visual Studio 2022\CSC2025\MyCode\ByteJumper\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</AdditionalLibraryDirectories>
     </Link>
     <MASM>
       <AssembledCodeListingFile>
       </AssembledCodeListingFile>
-      <IncludePaths>C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper</IncludePaths>
+      <IncludePaths>C:\Users\Aaron\Documents\Visual Studio 2022\CSC2025\MyCode\ByteJumper\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
     </MASM>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -144,17 +144,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <MASM Include="mechanics.asm">
-      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
-      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
-    </MASM>
     <MASM Include="Source Files\graphics.asm">
-      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Aaron\Documents\Visual Studio 2022\CSC2025\MyCode\ByteJumper\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
     </MASM>
     <MASM Include="Source Files\main.asm">
-      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Aaron\Documents\Visual Studio 2022\CSC2025\MyCode\ByteJumper\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
+    </MASM>
+    <MASM Include="Source Files\mechanics.asm">
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Aaron\Documents\Visual Studio 2022\CSC2025\MyCode\ByteJumper\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
     </MASM>
     <MASM Include="Source Files\readWriteProc.asm" />
   </ItemGroup>
