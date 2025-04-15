@@ -144,6 +144,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <MASM Include="graphics.asm">
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
+    </MASM>
     <MASM Include="Source Files\main.asm">
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\My Stuff\Coding Projects\x86Assembly\AssemblyFinal\ByteJumper\ByteJumper\Irvine\irvine</IncludePaths>
