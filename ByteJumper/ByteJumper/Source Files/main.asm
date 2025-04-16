@@ -7,6 +7,7 @@ INCLUDELIB kernel32.lib
 INCLUDELIB user32.lib
 
 extern GameStart@0 : near
+extern GameInit@0 : near
 .data
 GWL_STYLE      EQU -16
 WS_MAXIMIZEBOX EQU 00010000h
@@ -39,7 +40,10 @@ main PROC
     invoke SetWindowPos, ebx, 0, 0, 0, 0, 0, 0027h
     ; SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED
 
-    call GameStart@0
+
+
+    call GameInit@0
+    ;call GameStart@0
     exit
 main ENDP
 END main
