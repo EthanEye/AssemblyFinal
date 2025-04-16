@@ -3,7 +3,7 @@
 INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
 
-ROWS = 45 ; Y
+ROWS = 30 ; Y
 COLS = 119 ; X  
 SCREENSIZE = ROWS * COLS
 .data
@@ -11,8 +11,13 @@ gameBoard BYTE ROWS * COLS DUP('$') ; 5x10 = 50 bytes initialized to S
 msg BYTE "Loading Game...", 0   ; Null-terminated string
 .code
 
+GameEngine PROC 
+call GetCurrentFrame
 
-GameInit PROC
+ret
+GameEngine ENDP
+
+GetCurrentFrame PROC
 	mov edx, OFFSET msg    ; point to string
     call WriteString       ; print it
 	call Crlf              ; optional newline
@@ -37,9 +42,25 @@ GameInit PROC
 		jmp fillCharacters
 		endFill:
 		
-		
+ret
+GetCurrentFrame ENDP
+
+UpdateFrame PROC
+
 
 ret
-GameInit ENDP
+UpdateFrame ENDP
+
+UpdatePlayerPosition PROC
+
+
+ret
+UpdatePlayerPosition ENDP
+
+PlayerMovement PROC
+
+
+ret
+PlayerMovement ENDP
 
 END 

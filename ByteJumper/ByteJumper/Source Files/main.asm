@@ -7,7 +7,7 @@ INCLUDELIB kernel32.lib
 INCLUDELIB user32.lib
 
 extern GameStart@0 : near
-extern GameInit@0 : near
+extern GameEngine@0 : near
 .data
 GWL_STYLE      EQU -16
 WS_MAXIMIZEBOX EQU 00010000h
@@ -42,7 +42,7 @@ main PROC
 
 
 
-    call GameInit@0
+     call GameEngine@0
     ;call GameStart@0
     exit
 main ENDP
