@@ -8,6 +8,9 @@ INCLUDELIB user32.lib
 
 extern GameStart@0 : near
 extern GameEngine@0 : near
+extern GetStdHandle@4 : PROC
+extern GetConsoleMode@8 : PROC
+extern SetConsoleMode@8 : PROC
 .data
 GWL_STYLE      EQU -16
 WS_MAXIMIZEBOX EQU 00010000h
@@ -39,11 +42,15 @@ main PROC
     ; Force the window to update with the new style
     invoke SetWindowPos, ebx, 0, 0, 0, 0, 0, 0027h
     ; SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED
-
+    STD_INPUT_HANDLE EQU -10
+    ENABLE_QUICK_EDIT_MODE EQU 0x0040
+    ENABLE_EXTENDED_FLAGS  EQU 0x0080
 
 
      call GameEngine@0
     ;call GameStart@0
     exit
 main ENDP
+
+
 END main

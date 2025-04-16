@@ -2,26 +2,51 @@
 
 INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
-
-ROWS = 30 ; Y
+; SCREEN SIZE
+ROWS = 27 ; Y
 COLS = 119 ; X  
+; PLAYER POSITION
+x DWORD ?
+y DWORD ?
 SCREENSIZE = ROWS * COLS
+REFRESHTIME = 1 ; MilliSeconds
 .data
-gameBoard BYTE ROWS * COLS DUP('$') ; 5x10 = 50 bytes initialized to S
+index BYTE ?
+row BYTE 0
+col BYTE 0
+temp DWORD ? ; Previous Location
+gameBoard BYTE ROWS * COLS DUP('$') ; 5x10 = 50 bytes initialized to $
 msg BYTE "Loading Game...", 0   ; Null-terminated string
+;index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
 .code
 
+
 GameEngine PROC 
+
+mov esi, 0
+testLoop:
+mov eax, [temp]
+mov gameBoard[eax], '$'
+cmp esi, SCREENSIZE 
+jge exitTestLoop
+mov gameBoard[esi], 'X'   ; sets gameBoard[ecx] to 'X'
 call GetCurrentFrame
+mov eax, REFRESHTIME       ; delay for ~16 milliseconds
+call Delay
+mov edx, 0       ; column
+mov ecx, 0       ; row
+call Gotoxy      ;  just move cursor to top
+mov [temp], esi
+inc esi
+jmp testLoop
+
+exitTestLoop:
+
 
 ret
 GameEngine ENDP
 
 GetCurrentFrame PROC
-	mov edx, OFFSET msg    ; point to string
-    call WriteString       ; print it
-	call Crlf              ; optional newline
-		
 		mov ecx, 0
 		fillCharacters:
 		cmp ecx, SCREENSIZE 
@@ -36,11 +61,10 @@ GetCurrentFrame PROC
 		skipSpace:
 		mov al, gameBoard[ecx]
 		call WriteChar
-
-		
 		inc ecx
 		jmp fillCharacters
 		endFill:
+	
 		
 ret
 GetCurrentFrame ENDP
@@ -62,5 +86,6 @@ PlayerMovement PROC
 
 ret
 PlayerMovement ENDP
+
 
 END 
