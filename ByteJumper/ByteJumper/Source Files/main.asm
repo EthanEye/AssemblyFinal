@@ -11,7 +11,10 @@ extern GameEngine@0 : near
 extern GetStdHandle@4 : PROC
 extern GetConsoleMode@8 : PROC
 extern SetConsoleMode@8 : PROC
+extern SetConsoleTitleA@4: PROC
+
 .data
+titleStr BYTE "Byte Jumper", 0
 GWL_STYLE      EQU -16
 WS_MAXIMIZEBOX EQU 00010000h
 WS_THICKFRAME  EQU 00040000h
@@ -25,6 +28,9 @@ SetWindowLongA PROTO :DWORD, :DWORD, :DWORD
 SetWindowPos PROTO :DWORD, :DWORD, :DWORD, :DWORD, :DWORD, :DWORD, :DWORD
 
 main PROC
+    ; Set console title
+    push OFFSET titleStr
+    call SetConsoleTitleA@4
     ; Get the console window handle
     invoke GetConsoleWindow
     mov ebx, eax
@@ -46,9 +52,9 @@ main PROC
     ENABLE_QUICK_EDIT_MODE EQU 0x0040
     ENABLE_EXTENDED_FLAGS  EQU 0x0080
 
-
+     call GameStart@0
      call GameEngine@0
-    ;call GameStart@0
+    
     exit
 main ENDP
 

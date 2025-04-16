@@ -22,7 +22,7 @@ GameStart PROC
     mov edx, OFFSET bigText5
     call WriteString
     call WaitMsg
-    exit
+    
     ret
 GameStart ENDP
 

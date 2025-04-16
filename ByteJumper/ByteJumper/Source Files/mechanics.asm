@@ -2,27 +2,37 @@
 
 INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
-; SCREEN SIZE
+
+; SCREEN HEIGHT AND WIDTH
 ROWS = 27 ; Y
 COLS = 119 ; X  
+
+
+
+
+; SCREEN SIZE
+SCREENSIZE = ROWS * COLS
+
+; REFRESH TIME
+REFRESHTIME = 1 ; MilliSeconds
+
+.data
 ; PLAYER POSITION
 x DWORD ?
 y DWORD ?
-SCREENSIZE = ROWS * COLS
-REFRESHTIME = 1 ; MilliSeconds
-.data
 index BYTE ?
 row BYTE 0
 col BYTE 0
+commaStr BYTE ", ", 0
 temp DWORD ? ; Previous Location
-gameBoard BYTE ROWS * COLS DUP('$') ; 5x10 = 50 bytes initialized to $
+gameBoard BYTE ROWS * COLS DUP('$') ; 
 msg BYTE "Loading Game...", 0   ; Null-terminated string
 ;index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
 .code
 
 
 GameEngine PROC 
-
+call ClrScr
 mov esi, 0
 testLoop:
 mov eax, [temp]
@@ -31,7 +41,9 @@ cmp esi, SCREENSIZE
 jge exitTestLoop
 mov gameBoard[esi], 'X'   ; sets gameBoard[ecx] to 'X'
 call GetCurrentFrame
-mov eax, REFRESHTIME       ; delay for ~16 milliseconds
+mov eax, esi
+call PlayerLocation
+mov eax, REFRESHTIME       
 call Delay
 mov edx, 0       ; column
 mov ecx, 0       ; row
@@ -59,7 +71,7 @@ GetCurrentFrame PROC
 		jne skipSpace
 		call Crlf
 		skipSpace:
-		mov al, gameBoard[ecx]
+		mov al, gameBoard[ecx] ; write char at array index
 		call WriteChar
 		inc ecx
 		jmp fillCharacters
@@ -75,17 +87,33 @@ UpdateFrame PROC
 ret
 UpdateFrame ENDP
 
-UpdatePlayerPosition PROC
+; Converts array index into X, Y Coordinates
+; Parameters: EAX (gameBoard index)
+PlayerLocation PROC
+    xor edx, edx            ; clear EDX before DIV
+    mov ebx, COLS
+    div ebx                 ; EAX = row, EDX = col
+
+    mov ecx, eax            ; save row
+   
+	call Crlf               ; move to new line before printing
+
+    ; Print col
+    mov eax, edx
+    call WriteDec
+	; Print comma
+    mov edx, OFFSET commaStr
+    call WriteString
+	; Print row
+    mov eax, ecx
+    call WriteDec
+
+    ret
+PlayerLocation ENDP
 
 
-ret
-UpdatePlayerPosition ENDP
-
-PlayerMovement PROC
 
 
-ret
-PlayerMovement ENDP
 
 
 END 
