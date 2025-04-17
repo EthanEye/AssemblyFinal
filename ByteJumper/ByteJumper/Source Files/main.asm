@@ -13,6 +13,7 @@ extern GetConsoleMode@8 : PROC
 extern SetConsoleMode@8 : PROC
 extern SetConsoleTitleA@4: PROC
 
+
 .data
 titleStr BYTE "Byte Jumper", 0
 GWL_STYLE      EQU -16
@@ -54,6 +55,7 @@ main PROC
 
      call GameStart@0
      call GameEngine@0
+     
     
     exit
 main ENDP
