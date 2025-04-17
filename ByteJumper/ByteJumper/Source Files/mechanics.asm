@@ -37,6 +37,7 @@ mov eax, xCoord
 mov ebx, yCoord
 call ChangeCharAt
 call GetCurrentFrame
+call GetPlayerPos
 
 exitTestLoop:
 
@@ -113,14 +114,18 @@ ChangeCharAt ENDP
 ; Keeps track of each part of player character
 GetPlayerPos PROC
 
-
+call GetHeadPos
+call GetRightArmPos
+call GetLeftArmPos
+call GetTorsoPos
+call GetLeftLegPos
+call GetRightLegPos 
 ret
 GetPlayerPos ENDP
 
-; Called firsts updates coordinate relative to (player input)
+; Called first updates coordinate relative to (player input)
 GetHeadPos PROC
 
-mov eax, 10
 ret
 GetHeadPos ENDP
 
@@ -159,8 +164,21 @@ GetRightLegPos PROC
 ret
 GetRightLegPos ENDP
 
+SpawnPlayer PROC 
 
 
+
+ret
+SpawnPlayer ENDP
+
+StartPlatform PROC
+mov eax, 11
+mov ebx, 1
+
+
+
+ret
+StartPlatform ENDP
 
 
 END 
