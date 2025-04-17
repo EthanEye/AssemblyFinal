@@ -111,11 +111,11 @@ ret
 ChangeCharAt ENDP
 
 ; Keeps track of each part of player character
-PlayerPos PROC
+GetPlayerPos PROC
 
 
 ret
-PlayerPos ENDP
+GetPlayerPos ENDP
 
 ; Called firsts updates coordinate relative to (player input)
 GetHeadPos PROC
