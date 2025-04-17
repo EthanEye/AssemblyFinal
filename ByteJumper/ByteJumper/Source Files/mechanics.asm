@@ -17,12 +17,13 @@ REFRESHTIME = 1 ; MilliSeconds
 ; PLAYER POSITION
 xCoord DWORD ?
 yCoord DWORD ?
-index BYTE ?
+index BYTE ? 
 row BYTE 0
 col BYTE 0
+newChar BYTE 'O'
 commaStr BYTE ", ", 0
 temp DWORD ? ; Previous Location
-gameBoard BYTE ROWS * COLS DUP('$') ; 
+gameBoard BYTE ROWS * COLS DUP(' ') ; 
 msg BYTE "Loading Game...", 0   ; Null-terminated string
 ; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
 .code
@@ -30,7 +31,7 @@ msg BYTE "Loading Game...", 0   ; Null-terminated string
 
 GameEngine PROC 
 
-mov eax, 1000
+mov eax, 400
 call GetCoordinate
 mov eax, xCoord
 mov ebx, yCoord
@@ -86,23 +87,78 @@ GetCoordinate PROC
     mov edx, OFFSET commaStr
     call WriteString
 	; Print row
-	mov YCoord, ecx         ; Store Y value
-    mov eax, ecx
-    call WriteDec
+	mov eax, ROWS       ; use the ROWS constant
+	sub eax, ecx        ; eax = ROWS - row
+	mov YCoord, eax     ; store the flipped Y value
+	call WriteDec       ; print flipped Y
 	ret
 GetCoordinate ENDP
 
 ; Method for updating the chars on the Gameboard
 ; Parameters: EAX (X coordinate) EBX (Y coordinate)
 ChangeCharAt PROC
-  ; Convert (X = EAX, Y = EBX) index = (Y * COLS) + X
-    mov edx, ebx
-    imul edx, COLS       ; edx = row * COLS
-    add edx, eax         ; edx = (row * COLS) + col
-  ; update value at that index
-    mov gameBoard[edx], 'X'
+	; Flip Y: ebx = ROWS - ebx
+    mov edx, ROWS
+    sub edx, ebx      ; edx = flipped Y
+
+    ; Calculate index = (flippedY * COLS) + X
+    imul edx, COLS    ; edx = flippedY * COLS
+    add edx, eax      ; edx = (flippedY * COLS) + X
+
+    mov al, newChar           ; Set index to a specific character loaded from newChar
+	mov gameBoard[edx], al    ; store AL into gameBoard	
 ret
 ChangeCharAt ENDP
+
+; Keeps track of each part of player character
+PlayerPos PROC
+
+
+ret
+PlayerPos ENDP
+
+; Called firsts updates coordinate relative to (player input)
+GetHeadPos PROC
+
+
+ret
+GetHeadPos ENDP
+
+
+; Called second updates coordinate relative to head (down 1 right 1)
+GetRightArmPos PROC
+
+
+ret
+GetRightArmPos ENDP
+
+; Called third updates coordinate relative to head (down 1 left 1)
+GetLeftArmPos PROC
+
+ret
+GetLeftArmPos ENDP
+
+; Called fourth updates coordinate relative to head (down 1)
+GetTorsoPos PROC
+
+
+ret
+GetTorsoPos ENDP
+
+; Called fifth updates coordinate relative to torso down (1 left 1)
+GetLeftLegPos PROC
+
+
+ret
+GetLeftLegPos ENDP
+
+; Called sixth updates coordinate relative to torso down (1 right 1)
+GetRightLegPos PROC
+
+
+ret
+GetRightLegPos ENDP
+
 
 
 
