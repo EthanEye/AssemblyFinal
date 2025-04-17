@@ -120,7 +120,7 @@ GetPlayerPos ENDP
 ; Called firsts updates coordinate relative to (player input)
 GetHeadPos PROC
 
-
+mov eax, 10
 ret
 GetHeadPos ENDP
 
