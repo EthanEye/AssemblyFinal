@@ -2,10 +2,15 @@
 
 INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
+INCLUDELIB kernel32.lib 
+
+extern WriteConsoleW@20 : PROC  ;  declare external WinAPI
+extern GetStdHandle@4 : PROC
+
 
 ; SCREEN HEIGHT AND WIDTH
-ROWS = 27 ; Y
-COLS = 119 ; X  
+ROWS = 40 ; Y
+COLS = 100 ; X  
 
 ; SCREEN SIZE
 SCREENSIZE = ROWS * COLS
@@ -14,29 +19,36 @@ SCREENSIZE = ROWS * COLS
 REFRESHTIME = 1 ; MilliSeconds
 
 .data
+; PRINTING UNICODE
+outputHandle DWORD ?
+tempChar WORD ?
+bytesWritten DWORD ?
 ; PLAYER POSITION
 xCoord DWORD ?
 yCoord DWORD ?
 index BYTE ? 
-row BYTE 0
-col BYTE 0
-newChar BYTE 'O'
-commaStr BYTE ", ", 0
+row WORD 0
+col WORD 0
+newChar WORD 2584h
+commaStr WORD ", ", 0
 temp DWORD ? ; Previous Location
-gameBoard BYTE ROWS * COLS DUP(' ') ; 
+gameBoard WORD ROWS * COLS DUP(2588h) ; 
 msg BYTE "Loading Game...", 0   ; Null-terminated string
 ; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
 .code
 
 
 GameEngine PROC 
-
-mov eax, 400
-call GetCoordinate
-mov eax, xCoord
-mov ebx, yCoord
-call ChangeCharAt
+ ; Get console handle once
+    push -11
+    call GetStdHandle@4
+    mov outputHandle, eax
+;mov eax, 400
+;call GetCoordinate
+;call StartPlatform 
 call GetCurrentFrame
+
+;call SpawnPlayer
 call GetPlayerPos
 
 exitTestLoop:
@@ -46,31 +58,43 @@ ret
 GameEngine ENDP
 
 GetCurrentFrame PROC
-		mov ecx, 0
-		fillCharacters:
-		cmp ecx, SCREENSIZE 
-		jge endFill
-		mov eax, ecx
-		xor edx, edx      ; Clear remainder before division
-		mov ebx, COLS       ; Divisor
-		div ebx           ; EAX = ecx / 25, EDX = ecx % 25
-	    cmp edx, 0
-		jne skipSpace
-		call Crlf
-		skipSpace:
-		mov al, gameBoard[ecx] ; Write char at array index
-		call WriteChar
-		inc ecx
-		jmp fillCharacters
-		endFill:
-ret
+    mov ecx, 0
+
+fillCharacters:
+    cmp ecx, SCREENSIZE
+    jge endFill
+
+    ; Print newline every COLS
+    mov eax, ecx
+    xor edx, edx
+    mov ebx, COLS
+    div ebx
+    cmp edx, 0
+    jne skipSpace
+    call Crlf
+
+skipSpace:
+    push ecx                   ; preserve ECX
+    mov eax, ecx
+    shl eax, 1                 ; index * 2
+    mov ax, WORD PTR gameBoard[eax]
+    mov tempChar, ax
+    push 0
+    push offset bytesWritten
+    push 1
+    push offset tempChar
+    push outputHandle
+    call WriteConsoleW@20
+    pop ecx                    ; restore ECX
+    inc ecx
+    jmp fillCharacters
+
+endFill:
+    ret
 GetCurrentFrame ENDP
 
-UpdateFrame PROC
 
 
-ret
-UpdateFrame ENDP
 
 ; Converts array index into X, Y Coordinates
 ; Parameters: EAX (gameBoard index)
@@ -95,6 +119,13 @@ GetCoordinate PROC
 	ret
 GetCoordinate ENDP
 
+; Print coordinate given (EAX = x EBX = y)
+PrintCoordinate PROC
+
+
+ret
+PrintCoordinate ENDP
+
 ; Method for updating the chars on the Gameboard
 ; Parameters: EAX (X coordinate) EBX (Y coordinate)
 ChangeCharAt PROC
@@ -106,8 +137,11 @@ ChangeCharAt PROC
     imul edx, COLS    ; edx = flippedY * COLS
     add edx, eax      ; edx = (flippedY * COLS) + X
 
-    mov al, newChar           ; Set index to a specific character loaded from newChar
-	mov gameBoard[edx], al    ; store AL into gameBoard	
+
+	mov ax, newChar					 ; Set index to a specific character loaded from newChar
+	mov WORD PTR gameBoard[edx], ax ; store AL into gameBoard	
+
+  
 ret
 ChangeCharAt ENDP
 
@@ -165,20 +199,73 @@ ret
 GetRightLegPos ENDP
 
 SpawnPlayer PROC 
-
+mov eax, 56
+mov ebx, 13
+mov newChar, 'O'
+call ChangeCharAt
+mov eax, 56
+mov ebx, 12
+mov newChar, '?'
+call ChangeCharAt
+mov eax, 57
+mov ebx, 12
+mov newChar, '\'
+call ChangeCharAt
+mov eax, 55
+mov ebx, 12
+mov newChar, '/'
+call ChangeCharAt
+mov eax, 57
+mov ebx, 11
+mov newChar, '\'
+call ChangeCharAt
+mov eax, 55
+mov ebx, 11
+mov newChar, '/'
+call ChangeCharAt
 
 
 ret
 SpawnPlayer ENDP
 
 StartPlatform PROC
-mov eax, 11
-mov ebx, 1
 
-
+mov eax, 54
+mov ebx, 10
+mov newChar, '_'
+call ChangeCharAt
+mov eax, 55
+mov ebx, 10
+mov newChar, '_'
+call ChangeCharAt
+mov eax, 56
+mov ebx, 10
+mov newChar, '_'
+call ChangeCharAt
+mov eax, 57
+mov ebx, 10
+mov newChar, '_'
+call ChangeCharAt
+mov eax, 58
+mov ebx, 10
+mov newChar, '_'
+call ChangeCharAt
 
 ret
 StartPlatform ENDP
+
+ret
+MoveLeft PROC
+
+ret
+MoveLeft ENDP
+
+
+
+MoveRight PROC
+
+ret
+MoveRight ENDP
 
 
 END 

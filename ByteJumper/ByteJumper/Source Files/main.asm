@@ -52,7 +52,8 @@ main PROC
     STD_INPUT_HANDLE EQU -10
     ENABLE_QUICK_EDIT_MODE EQU 0x0040
     ENABLE_EXTENDED_FLAGS  EQU 0x0080
-
+   
+    ; Game start 
      call GameStart@0
      call GameEngine@0
      
