@@ -305,5 +305,4 @@ MoveRight PROC
 ret
 MoveRight ENDP
 
-
-END 
+END

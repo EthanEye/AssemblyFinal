@@ -12,6 +12,7 @@ extern GetStdHandle@4 : PROC
 extern GetConsoleMode@8 : PROC
 extern SetConsoleMode@8 : PROC
 extern SetConsoleTitleA@4: PROC
+extern GetConsoleUi@0 : PROC
 
 
 .data
@@ -55,7 +56,9 @@ main PROC
    
     ; Game start 
      call GameStart@0
-     call GameEngine@0
+    
+  
+    ; call GameEngine@0
      
     
     exit
