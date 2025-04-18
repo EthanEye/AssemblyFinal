@@ -9,8 +9,8 @@ extern GetStdHandle@4 : PROC
 
 
 ; SCREEN HEIGHT AND WIDTH
-ROWS = 40 ; Y
-COLS = 100 ; X  
+ROWS = 25 ; Y
+COLS = 120 ; X  
 
 ; SCREEN SIZE
 SCREENSIZE = ROWS * COLS
@@ -32,7 +32,7 @@ col WORD 0
 newChar WORD 2584h
 commaStr WORD ", ", 0
 temp DWORD ? ; Previous Location
-gameBoard WORD ROWS * COLS DUP(2588h) ; 
+gameBoard WORD ROWS * COLS DUP(' ') ; 
 msg BYTE "Loading Game...", 0   ; Null-terminated string
 ; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
 .code
@@ -43,12 +43,26 @@ GameEngine PROC
     push -11
     call GetStdHandle@4
     mov outputHandle, eax
+    call Clrscr
+    
+   
 ;mov eax, 400
 ;call GetCoordinate
-;call StartPlatform 
-call GetCurrentFrame
+call StartPlatform 
+call SpawnPlayer
 
-;call SpawnPlayer
+testLoop_:
+
+
+mov eax, 1    ; time in milliseconds
+call Delay       ;  pauses program for 500 ms
+call GetCurrentFrame
+mov edx, 0   ; column
+mov ecx, 0     ; row
+call Gotoxy    ;  move the cursor
+jmp testLoop_
+
+call GetCurrentFrame
 call GetPlayerPos
 
 exitTestLoop:
@@ -128,22 +142,26 @@ PrintCoordinate ENDP
 
 ; Method for updating the chars on the Gameboard
 ; Parameters: EAX (X coordinate) EBX (Y coordinate)
+; Parameters: EAX = X, EBX = Y
 ChangeCharAt PROC
-	; Flip Y: ebx = ROWS - ebx
+    ; Flip Y: edx = ROWS - ebx
     mov edx, ROWS
-    sub edx, ebx      ; edx = flipped Y
+    sub edx, ebx              ; flippedY
 
     ; Calculate index = (flippedY * COLS) + X
-    imul edx, COLS    ; edx = flippedY * COLS
-    add edx, eax      ; edx = (flippedY * COLS) + X
+    imul edx, COLS            ; edx = row * COLS
+    add edx, eax              ; edx = (row * COLS) + col
 
+    ; Scale index for WORD array (2 bytes per element)
+    shl edx, 1                ; edx = edx * 2
 
-	mov ax, newChar					 ; Set index to a specific character loaded from newChar
-	mov WORD PTR gameBoard[edx], ax ; store AL into gameBoard	
+    ; Write new character to gameBoard
+    mov ax, newChar
+    mov WORD PTR gameBoard[edx], ax
 
-  
-ret
+    ret
 ChangeCharAt ENDP
+
 
 ; Keeps track of each part of player character
 GetPlayerPos PROC
@@ -200,27 +218,27 @@ GetRightLegPos ENDP
 
 SpawnPlayer PROC 
 mov eax, 56
-mov ebx, 13
-mov newChar, 'O'
+mov ebx, 5
+mov newChar, 25CBh
 call ChangeCharAt
 mov eax, 56
-mov ebx, 12
-mov newChar, '?'
+mov ebx, 4
+mov newChar, '|'
 call ChangeCharAt
 mov eax, 57
-mov ebx, 12
+mov ebx, 4
 mov newChar, '\'
 call ChangeCharAt
 mov eax, 55
-mov ebx, 12
+mov ebx, 4
 mov newChar, '/'
 call ChangeCharAt
 mov eax, 57
-mov ebx, 11
+mov ebx, 3
 mov newChar, '\'
 call ChangeCharAt
 mov eax, 55
-mov ebx, 11
+mov ebx, 3
 mov newChar, '/'
 call ChangeCharAt
 
@@ -231,24 +249,44 @@ SpawnPlayer ENDP
 StartPlatform PROC
 
 mov eax, 54
-mov ebx, 10
-mov newChar, '_'
+mov ebx, 2
+mov newChar, 2588h
 call ChangeCharAt
 mov eax, 55
-mov ebx, 10
-mov newChar, '_'
+mov ebx, 2
+mov newChar, 2588h
 call ChangeCharAt
 mov eax, 56
-mov ebx, 10
-mov newChar, '_'
+mov ebx, 2
+mov newChar, 2588h
 call ChangeCharAt
 mov eax, 57
-mov ebx, 10
-mov newChar, '_'
+mov ebx, 2
+mov newChar, 2588h
 call ChangeCharAt
 mov eax, 58
-mov ebx, 10
-mov newChar, '_'
+mov ebx, 2
+mov newChar, 2588h
+call ChangeCharAt
+mov eax, 54
+mov ebx, 1
+mov newChar, 2588h
+call ChangeCharAt
+mov eax, 55
+mov ebx, 1
+mov newChar, 2588h
+call ChangeCharAt
+mov eax, 56
+mov ebx, 1
+mov newChar, 2588h
+call ChangeCharAt
+mov eax, 57
+mov ebx, 1
+mov newChar, 2588h
+call ChangeCharAt
+mov eax, 58
+mov ebx, 1
+mov newChar, 2588h
 call ChangeCharAt
 
 ret
