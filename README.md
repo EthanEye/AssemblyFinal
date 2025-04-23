@@ -8,19 +8,36 @@ This game was created by:
 
 ---
 
-## ℹ️ Setup Info
+## Setup Info
 
 > 💡 **Important:**  
 Make sure the **Irvine32** library is installed in the following path:
 C:\ Irvine \ irvine
 
-## ⚙️ Mechanics.asm
+## Mechanics.asm
 
 `mechanics.asm` is a core module in the game responsible for handling in-game logic and interactions.
 
 ---
+## Graphics.asm
 
-## 🛠️ What It Does
+
+
+---
+
+## Timer.asm
+
+
+
+---
+
+## Input.asm
+
+
+
+---
+
+## What It Does
 
 - Manages game board updates
 - Handles player movement and collisions
@@ -29,13 +46,13 @@ C:\ Irvine \ irvine
 
 ---
 
-## 📁 File Location
+## File Location
 
 Ensure `mechanics.asm` is placed in your MASM project under the correct source folder, and included in your build process.
 
 ---
 
-## 🔗 Dependencies
+## Dependencies
 
 - **Irvine32 Library**
 - Console functions (like `WriteConsoleW`, `SetConsoleCursorInfo`, etc.)
