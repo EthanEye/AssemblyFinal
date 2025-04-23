@@ -13,6 +13,7 @@ extern GetConsoleMode@8 : PROC
 extern SetConsoleMode@8 : PROC
 extern SetConsoleTitleA@4: PROC
 extern GetConsoleUi@0 : PROC
+extern GameOver@0 : near
 
 
 .data
@@ -59,6 +60,9 @@ main PROC
     
   
     ; call GameEngine@0
+
+    ; Game over
+     call GameOver@0
      
     
     exit

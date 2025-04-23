@@ -25,6 +25,22 @@ bigText3 BYTE "\ \  __<   \ \____ \  \/_/\ \/ \ \  __\       _\_\ \  \ \ \_\ \  
 bigText4 BYTE " \ \_____\  \/\_____\    \ \_\  \ \_____\    /\_____\  \ \_____\  \ \_\ \ \_\  \ \_\    \ \_____\  \ \_\ \_\", 10, 0
 bigText5 BYTE "  \/_____/   \/_____/     \/_/   \/_____/    \/_____/   \/_____/   \/_/  \/_/   \/_/     \/_____/   \/_/ /_/ ", 10,0                                                                                                            
 
+
+gameOverText1 BYTE "  ______    ______   __       __  ________         ______   __     __  ________  _______",10,0
+gameOverText2 BYTE " /      \  /      \ |  \     /  \|        \       /      \ |  \   |  \|        \|       \",10,0
+gameOverText3 BYTE "|  $$$$$$\|  $$$$$$\| $$\   /  $$| $$$$$$$$      |  $$$$$$\| $$   | $$| $$$$$$$$| $$$$$$$\",10,0
+gameOverText4 BYTE "| $$ __\$$| $$__| $$| $$$\ /  $$$| $$__          | $$  | $$| $$   | $$| $$__    | $$__| $$",10,0
+gameOverText5 BYTE "| $$|    \| $$    $$| $$$$\  $$$$| $$  \         | $$  | $$ \$$\ /  $$| $$  \   | $$    $$",10,0
+gameOverText6 BYTE "| $$ \$$$$| $$$$$$$$| $$\$$ $$ $$| $$$$$         | $$  | $$  \$$\  $$ | $$$$$   | $$$$$$$\",10,0
+gameOverText7 BYTE "| $$__| $$| $$  | $$| $$ \$$$| $$| $$_____       | $$__/ $$   \$$ $$  | $$_____ | $$  | $$",10,0
+gameOverText8 BYTE " \$$    $$| $$  | $$| $$  \$ | $$| $$     \       \$$    $$    \$$$   | $$     \| $$  | $$",10,0
+gameOverText9 BYTE "  \$$$$$$  \$$   \$$ \$$      \$$ \$$$$$$$$        \$$$$$$      \$     \$$$$$$$$ \$$   \$$",10,0
+                                                                                          
+                                                                                       
+                                                                                          
+
+
+
 .code
 
 ; Welcome Screen Message, "Play Button", Title Screen, Rules etc...
@@ -41,8 +57,8 @@ GameStart PROC
     call WriteString
     call WaitMsg
    
-    mov eax, 10
-    mov ebx, 10
+    mov eax, 10                 ; this is the x value
+    mov ebx, 10                 ; this is the y value
     mov newChar, 'X'
     call ChangeChar
     call GetConsoleUi
@@ -123,4 +139,40 @@ ChangeChar PROC
 
     ret
 ChangeChar ENDP
+
+GameOver PROC
+    call Clrscr
+    
+    mov edx, OFFSET gameOverText1
+    call WriteString
+    mov edx, OFFSET gameOverText2
+    call WriteString
+    mov edx, OFFSET gameOverText3
+    call WriteString
+    mov edx, OFFSET gameOverText4
+    call WriteString
+    mov edx, OFFSET gameOverText5
+    call WriteString
+    mov edx, OFFSET gameOverText6
+    call WriteString
+    mov edx, OFFSET gameOverText7
+    call WriteString
+    mov edx, OFFSET gameOverText8
+    call WriteString
+    mov edx, OFFSET gameOverText9
+    call WriteString
+
+    call WaitMsg
+   
+    mov eax, 10                 ; this is the x value
+    mov ebx, 10                 ; this is the y value
+    mov newChar, 'X'
+    call ChangeChar
+    call GetConsoleUi
+    
+    ret
+
+GameOver ENDP
+
+
 END 
