@@ -14,7 +14,7 @@ This game was created by:
 Make sure the **Irvine32** library is installed in the following path:
 C:\ Irvine \ irvine
 
-# ⚙️ Mechanics.asm
+## ⚙️ Mechanics.asm
 
 `mechanics.asm` is a core module in the game responsible for handling in-game logic and interactions.
 
@@ -42,7 +42,5 @@ Ensure `mechanics.asm` is placed in your MASM project under the correct source f
 
 ---
 
-## ⚠️ Setup Note
 
-> Make sure the **Irvine32** library is correctly installed here:
 
