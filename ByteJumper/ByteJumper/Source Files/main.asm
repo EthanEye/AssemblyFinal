@@ -1,3 +1,8 @@
+;----------------------------
+
+; BYTE JUMPER
+
+;----------------------------
 
 option casemap:none
 
@@ -55,10 +60,10 @@ main PROC
     ENABLE_EXTENDED_FLAGS  EQU 0x0080
    
     ; Game start 
-     call GameStart@0
+    call GameStart@0
     
   
-    ; call GameEngine@0
+    call GameEngine@0
      
     
     exit

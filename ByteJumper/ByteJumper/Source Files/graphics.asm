@@ -18,7 +18,7 @@ outputHandle DWORD ?
 tempChar WORD ?
 bytesWritten DWORD ?
 newChar WORD 2584h
-gameBoard WORD ROWS * COLS DUP(' ') ;
+gameBoard WORD ROWS * COLS DUP('X') ;
 bigText1 BYTE " ______     __  __     ______   ______          __     __  __     __    __     ______   ______     ______    ", 10,0  
 bigText2 BYTE "/\  == \   /\ \_\ \   /\__  _\ /\  ___\        /\ \   /\ \/\ \   /\ -./  \    /\  == \ /\  ___\   /\  == \  ", 10,0 
 bigText3 BYTE "\ \  __<   \ \____ \  \/_/\ \/ \ \  __\       _\_\ \  \ \ \_\ \  \ \ \-./\ \  \ \  _-/ \ \  __\   \ \  __< " , 10,0 
@@ -41,11 +41,11 @@ GameStart PROC
     call WriteString
     call WaitMsg
    
-    mov eax, 10
-    mov ebx, 10
-    mov newChar, 'X'
+    mov eax, 10 ; this is the x value
+    mov ebx, 10 ; this is the y value
+    mov newChar, 2584h
     call ChangeChar
-    call GetConsoleUi
+    ;call GetConsoleUi
     
     ret
     GameStart ENDP

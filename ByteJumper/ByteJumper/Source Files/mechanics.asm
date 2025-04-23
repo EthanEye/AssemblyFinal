@@ -4,8 +4,10 @@ INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
 INCLUDELIB kernel32.lib 
 
-extern WriteConsoleW@20 : PROC  ;  declare external WinAPI
-extern GetStdHandle@4 : PROC
+EXTERN WriteConsoleW@20 : PROC  ;  declare external WinAPI
+EXTERN GetStdHandle@4 : PROC
+EXTERN SetConsoleCursorInfo@8 : PROC
+EXTERN StartInputThread@0 : PROC
 
 
 ; SCREEN HEIGHT AND WIDTH
@@ -19,6 +21,9 @@ SCREENSIZE = ROWS * COLS
 REFRESHTIME = 1 ; MilliSeconds
 
 .data
+; CURSOR 
+hStdOut      DWORD ?
+cursorInfo   CONSOLE_CURSOR_INFO <>
 ; PRINTING UNICODE
 outputHandle DWORD ?
 tempChar WORD ?
@@ -30,7 +35,9 @@ index BYTE ?
 row WORD 0
 col WORD 0
 newChar WORD 2584h
-commaStr WORD ", ", 0
+commaStr DWORD " , ", 0
+leftPrt DWORD "( ", 0
+rightPrt DWORD ")", 0
 temp DWORD ? ; Previous Location
 gameBoard WORD ROWS * COLS DUP(' ') ; 
 msg BYTE "Loading Game...", 0   ; Null-terminated string
@@ -39,32 +46,44 @@ msg BYTE "Loading Game...", 0   ; Null-terminated string
 
 
 GameEngine PROC 
- ; Get console handle once
+  ; Create new thread for player input
+    call StartInputThread@0
+  ; Get console handle once
     push -11
     call GetStdHandle@4
     mov outputHandle, eax
+
+    ; Clear screen
     call Clrscr
-    
+
+    ; Set up the CONSOLE_CURSOR_INFO structure
+    mov cursorInfo.dwSize, 1        ; Minimum size
+    mov cursorInfo.bVisible, 0      ; FALSE (invisible)
+
+    ; Call SetConsoleCursorInfo with stored handle
+    push OFFSET cursorInfo
+    push outputHandle
+    call SetConsoleCursorInfo@8
+
+    ; Main loop or other code
+    call Crlf
    
 ;mov eax, 400
 ;call GetCoordinate
 call StartPlatform 
 call SpawnPlayer
 
-testLoop_:
 
-
-mov eax, 1    ; time in milliseconds
+; This is where the main game functions are called
+mainLoop_:
+mov eax, 1   ; time in milliseconds
 call Delay       ;  pauses program for 500 ms
-call GetCurrentFrame
 mov edx, 0   ; column
 mov ecx, 0     ; row
 call Gotoxy    ;  move the cursor
-jmp testLoop_
-
 call GetCurrentFrame
-call GetPlayerPos
-
+call PrintPlayerPos
+jmp mainLoop_
 exitTestLoop:
 
 
@@ -134,11 +153,22 @@ GetCoordinate PROC
 GetCoordinate ENDP
 
 ; Print coordinate given (EAX = x EBX = y)
-PrintCoordinate PROC
+PrintPlayerPos PROC
 
+mov edx, offset leftPrt
+call WriteString
+mov eax, xCoord 
+call WriteInt
+mov edx, offset commaStr
+call WriteString
+mov eax, yCoord
+call WriteInt
+mov edx, offset rightPrt
+call WriteString
 
 ret
-PrintCoordinate ENDP
+
+PrintPlayerPos ENDP
 
 ; Method for updating the chars on the Gameboard
 ; Parameters: EAX (X coordinate) EBX (Y coordinate)
@@ -175,7 +205,17 @@ call GetRightLegPos
 ret
 GetPlayerPos ENDP
 
+; Used to update player position from Input
+; Parameters EAX = new X EBX = new Y
+SetPlayerPos PROC
+mov xCoord, eax
+mov yCoord, ebx
+ret
+SetPlayerPos ENDP
+
 ; Called first updates coordinate relative to (player input)
+; Input checks for movement -> Set Player Position is called every ms - > 
+; GetPlayerPos called every ms -> character follows head pos
 GetHeadPos PROC
 
 ret
@@ -219,6 +259,8 @@ GetRightLegPos ENDP
 SpawnPlayer PROC 
 mov eax, 56
 mov ebx, 5
+mov xCoord, 56 ; Set player position
+mov yCoord, 5 ; Set player position
 mov newChar, 25CBh
 call ChangeCharAt
 mov eax, 56
@@ -304,5 +346,7 @@ MoveRight PROC
 
 ret
 MoveRight ENDP
+
+
 
 END
