@@ -17,6 +17,10 @@ C:\ Irvine \ irvine
 ## Mechanics.asm
 
 `mechanics.asm` is a core module in the game responsible for handling in-game logic and interactions.
+- Manages game board updates
+- Handles player movement and collisions
+- Interacts with the main loop and drawing routines
+- Implements custom character rendering using the Windows console
 
 ---
 ## Graphics.asm
@@ -34,21 +38,6 @@ C:\ Irvine \ irvine
 ## Input.asm
 
 
-
----
-
-## What It Does
-
-- Manages game board updates
-- Handles player movement and collisions
-- Interacts with the main loop and drawing routines
-- Implements custom character rendering using the Windows console
-
----
-
-## File Location
-
-Ensure `mechanics.asm` is placed in your MASM project under the correct source folder, and included in your build process.
 
 ---
 
