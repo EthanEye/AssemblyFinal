@@ -1,4 +1,4 @@
-## 👥 Authors
+## Authors
 
 This game was created by:
 
@@ -10,7 +10,7 @@ This game was created by:
 
 ## Setup Info
 
-> 💡 **Important:**  
+> **Important:**  
 Make sure the **Irvine32** library is installed in the following path:
 C:\ Irvine \ irvine
 
