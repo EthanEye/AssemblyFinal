@@ -1,4 +1,15 @@
-AUTHORS: 
-This Game was made by Ethan Eye, Aaron Lobos, and Ryan Craig
-INFO:
-Irvine must be placed in the C drive C: Irvine/irvine
+## 👥 Authors
+
+This game was created by:
+
+- **Ethan Eye**
+- **Aaron Lobos**
+- **Ryan Craig**
+
+---
+
+## ℹ️ Setup Info
+
+> 💡 **Important:**  
+Make sure the **Irvine32** library is installed in the following path:
+C:\ Irvine \ irvine
