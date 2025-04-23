@@ -35,12 +35,16 @@ index BYTE ?
 row WORD 0
 col WORD 0
 newChar WORD 2584h
+; STRINGS AND CHARACTERS
 commaStr DWORD " , ", 0
-leftPrt DWORD "( ", 0
-rightPrt DWORD ")", 0
+leftPrt DWORD " ( ", 0
+rightPrt DWORD " ) ", 0
 temp DWORD ? ; Previous Location
 gameBoard WORD ROWS * COLS DUP(' ') ; 
 msg BYTE "Loading Game...", 0   ; Null-terminated string
+inputStr BYTE 32 DUP(0)    ; reserve 32 bytes for output message ; Updated based on current input for debugging
+fpsBuffer DWORD ?
+fpsMsg BYTE "FPS: ", 0
 ; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
 .code
 
@@ -81,8 +85,9 @@ call Delay       ;  pauses program for 500 ms
 mov edx, 0   ; column
 mov ecx, 0     ; row
 call Gotoxy    ;  move the cursor
-call GetCurrentFrame
 call PrintPlayerPos
+call GetCurrentFrame
+
 jmp mainLoop_
 exitTestLoop:
 
@@ -154,7 +159,6 @@ GetCoordinate ENDP
 
 ; Print coordinate given (EAX = x EBX = y)
 PrintPlayerPos PROC
-
 mov edx, offset leftPrt
 call WriteString
 mov eax, xCoord 
@@ -165,6 +169,18 @@ mov eax, yCoord
 call WriteInt
 mov edx, offset rightPrt
 call WriteString
+mov edx, offset inputStr
+call WriteString
+; FPS
+mov edx, offset leftPrt
+call WriteString
+mov edx, offset fpsMsg
+call WriteString
+mov eax, fpsBuffer
+call WriteDec
+mov edx, offset rightPrt
+call WriteString
+
 
 ret
 
@@ -213,6 +229,35 @@ mov yCoord, ebx
 ret
 SetPlayerPos ENDP
 
+; Called from input.asm EDX = new message address
+SetInputMsg PROC
+; EDX = address of source null-terminated string
+    ; Destination = inputStr
+    push esi
+    push edi
+
+    mov esi, edx              ; source string
+    mov edi, OFFSET inputStr  ; destination buffer
+    mov ecx, 32               ; max length (buffer size)
+
+copyLoop_:
+    lodsb                     ; load byte from [esi] AL
+    stosb                     ; store AL into [edi]
+    test al, al               ; check if null terminator
+    jz done_
+    loop copyLoop_
+
+done_:
+    pop edi
+    pop esi
+    ret
+SetInputMsg ENDP
+
+; Update FPS msg EDX = new FRAME RATE from input.asm
+SetFpsBuffer PROC
+mov fpsBuffer, edx 
+ret
+SetFpsBuffer ENDP
 ; Called first updates coordinate relative to (player input)
 ; Input checks for movement -> Set Player Position is called every ms - > 
 ; GetPlayerPos called every ms -> character follows head pos
@@ -220,6 +265,7 @@ GetHeadPos PROC
 
 ret
 GetHeadPos ENDP
+
 
 
 ; Called second updates coordinate relative to head (down 1 right 1)
@@ -346,6 +392,8 @@ MoveRight PROC
 
 ret
 MoveRight ENDP
+
+
 
 
 
