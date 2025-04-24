@@ -20,6 +20,7 @@ extern SetConsoleTitleA@4: PROC
 extern GetConsoleUi@0 : PROC
 
 
+
 .data
 titleStr BYTE "Byte Jumper", 0
 GWL_STYLE      EQU -16
