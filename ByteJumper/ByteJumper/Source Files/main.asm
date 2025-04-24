@@ -1,3 +1,8 @@
+;----------------------------
+
+; BYTE JUMPER
+
+;----------------------------
 
 option casemap:none
 
@@ -14,6 +19,7 @@ extern SetConsoleMode@8 : PROC
 extern SetConsoleTitleA@4: PROC
 extern GetConsoleUi@0 : PROC
 extern timer : PROC
+
 
 
 .data
@@ -58,6 +64,10 @@ main PROC
     ; Game start 
      call GameStart@0
     call GameEngine@0
+    
+  
+    ; call GameEngine@0
+     
     
     exit
 main ENDP
