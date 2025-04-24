@@ -46,6 +46,8 @@ inputStr BYTE 32 DUP(0)    ; reserve 32 bytes for output message ; Updated based
 fpsBuffer DWORD ?
 fpsMsg BYTE "FPS: ", 0
 ; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
+; PLAYER LOGIC
+isGrounded BYTE 1
 .code
 
 
@@ -86,6 +88,7 @@ mov edx, 0   ; column
 mov ecx, 0     ; row
 call Gotoxy    ;  move the cursor
 call PrintPlayerPos
+call GetPlayerPos
 call GetCurrentFrame
 
 jmp mainLoop_
@@ -136,26 +139,26 @@ GetCurrentFrame ENDP
 
 ; Converts array index into X, Y Coordinates
 ; Parameters: EAX (gameBoard index)
-GetCoordinate PROC
-    xor edx, edx            ; Clear EDX before DIV
-    mov ebx, COLS			; Adjust for width of board
-    div ebx					; Divides EDX by EAX        
-	mov ecx, eax            ; Save row
-	call Crlf               ; Move to new line before printing
+;GetCoordinate PROC
+    ;xor edx, edx            ; Clear EDX before DIV
+    ;mov ebx, COLS			; Adjust for width of board
+    ;div ebx					; Divides EDX by EAX        
+	;mov ecx, eax            ; Save row
+	;call Crlf               ; Move to new line before printing
 	; Print col
-	mov xCoord, edx         ; Store X value
-    mov eax, edx
-    call WriteDec
+	;mov xCoord, edx         ; Store X value
+    ;mov eax, edx
+    ;call WriteDec
 	; Print comma
-    mov edx, OFFSET commaStr
-    call WriteString
+    ;mov edx, OFFSET commaStr
+    ;call WriteString
 	; Print row
-	mov eax, ROWS       ; use the ROWS constant
-	sub eax, ecx        ; eax = ROWS - row
-	mov YCoord, eax     ; store the flipped Y value
-	call WriteDec       ; print flipped Y
-	ret
-GetCoordinate ENDP
+	;mov eax, ROWS       ; use the ROWS constant
+	;sub eax, ecx        ; eax = ROWS - row
+	;mov YCoord, eax     ; store the flipped Y value
+	;call WriteDec       ; print flipped Y
+	;ret
+;GetCoordinate ENDP
 
 ; Print coordinate given (EAX = x EBX = y)
 PrintPlayerPos PROC
@@ -169,9 +172,7 @@ mov eax, yCoord
 call WriteInt
 mov edx, offset rightPrt
 call WriteString
-mov edx, offset inputStr
-call WriteString
-; FPS
+; FPS TEXT
 mov edx, offset leftPrt
 call WriteString
 mov edx, offset fpsMsg
@@ -180,6 +181,11 @@ mov eax, fpsBuffer
 call WriteDec
 mov edx, offset rightPrt
 call WriteString
+; INPUT TEXT
+mov edx, offset inputStr
+call WriteString
+; FPS TEXT
+
 
 
 ret
@@ -265,9 +271,6 @@ GetHeadPos PROC
 
 ret
 GetHeadPos ENDP
-
-
-
 ; Called second updates coordinate relative to head (down 1 right 1)
 GetRightArmPos PROC
 
@@ -302,12 +305,18 @@ GetRightLegPos PROC
 ret
 GetRightLegPos ENDP
 
+; Head position updated from input.asm and then Getplayer position will update body relative to head
+SetHeadPos PROC
+
+ret
+SetHeadPos ENDP
+
 SpawnPlayer PROC 
 mov eax, 56
 mov ebx, 5
-mov xCoord, 56 ; Set player position
+mov xCoord, 56 ; Set player position from head Pos
 mov yCoord, 5 ; Set player position
-mov newChar, 25CBh
+mov newChar, 1
 call ChangeCharAt
 mov eax, 56
 mov ebx, 4
@@ -380,18 +389,7 @@ call ChangeCharAt
 ret
 StartPlatform ENDP
 
-ret
-MoveLeft PROC
 
-ret
-MoveLeft ENDP
-
-
-
-MoveRight PROC
-
-ret
-MoveRight ENDP
 
 
 

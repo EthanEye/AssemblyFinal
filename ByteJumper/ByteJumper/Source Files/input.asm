@@ -12,18 +12,20 @@ EXTERN SetPlayerPos@0 : PROC
 EXTERN SetInputMsg@0 : PROC
 EXTERN GetTickCount@0 : PROC
 EXTERN SetFpsBuffer@0 : PROC
+EXTERN Jump@0 : PROC
+
 
 .data
 threadID DWORD ?
 threadHandle DWORD ?
-spaceStr BYTE "   (SPACE) ", 0
-leftStr BYTE " (LEFT KEY) ", 0
-rightStr BYTE"(RIGHT KEY)", 0
-resetStr BYTE " "
+spaceStr BYTE "   (SPACE)    ", 0
+leftStr BYTE " (LEFT KEY)    ", 0
+rightStr BYTE"(RIGHT KEY)    ", 0
+
 prevTick   DWORD ?
 currTick   DWORD ?
 frameTime  DWORD ?
-fpsBuffer  BYTE "FPS: ", 0
+fpsBuffer  BYTE "     FPS:", 0
 
 
 .code
@@ -46,13 +48,18 @@ StartInputThread PROC
 
 
  PlayerInput PROC
-    ; Do your thread work here
+    ; Player start head position
+    mov eax, 5
+    mov ebx, 56
+    call SetPlayerPos@0
+    ; Thread loop is here
       ThreadLoop_:
      
     call FrameCounter
     call OnSpacePress ; Check for SPACE being pressed
     call OnMoveLeft   ; Check for A being pressed
     call OnMoveRight  ; Check for D being pressed
+     ;
     mov eax, 1   ; time in milliseconds
     call Delay
     ; Main thread work
@@ -68,12 +75,10 @@ OnSpacePress PROC
     test ax, 8000h         ; check high bit (key currently down)
     jz noSpace_
 
-    ; Do something here
-
+    ; Call jump proc in mechanics.asm
+    call Jump@0
     mov edx, offset spaceStr
     call SetInputMsg@0 ; Update input message to "SPACE"
-    
-    
     noSpace_:
     ret
     
