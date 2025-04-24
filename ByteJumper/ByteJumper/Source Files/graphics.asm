@@ -18,6 +18,7 @@ outputHandle DWORD ?
 tempChar WORD ?
 bytesWritten DWORD ?
 newChar WORD 2584h
+cornerChar WORD 
 gameBoard WORD ROWS * COLS DUP(' ') ;
 bigText1 BYTE " ______     __  __     ______   ______          __     __  __     __    __     ______   ______     ______    ", 10,0  
 bigText2 BYTE "/\  == \   /\ \_\ \   /\__  _\ /\  ___\        /\ \   /\ \/\ \   /\ -./  \    /\  == \ /\  ___\   /\  == \  ", 10,0 
@@ -25,6 +26,14 @@ bigText3 BYTE "\ \  __<   \ \____ \  \/_/\ \/ \ \  __\       _\_\ \  \ \ \_\ \  
 bigText4 BYTE " \ \_____\  \/\_____\    \ \_\  \ \_____\    /\_____\  \ \_____\  \ \_\ \ \_\  \ \_\    \ \_____\  \ \_\ \_\", 10, 0
 bigText5 BYTE "  \/_____/   \/_____/     \/_/   \/_____/    \/_____/   \/_____/   \/_/  \/_/   \/_/     \/_____/   \/_/ /_/ ", 10,0                                                                                                            
 
+
+start BYTE "            How To Play: '?' ||| Start: 'Enter' ||| Quit: 'Esc'",10,0 
+
+howToPlay1 BYTE "                   HOW TO PLAY",10,0
+howToPlay2 BYTE "           MOVE: A(LEFT), D(RIGHT)",10,0
+howToPlay3 BYTE "           JUMP: SPACE BAR",10,0
+howToPlay4 BYTE "           LAND ON PLATFORMS TO SURVIVE",10,0
+howToPlay5 BYTE "           MISS A PLATFORM === GAME OVER",10,0
 
 gameOverText1 BYTE "  ______    ______   __       __  ________         ______   __     __  ________  _______",10,0
 gameOverText2 BYTE " /      \  /      \ |  \     /  \|        \       /      \ |  \   |  \|        \|       \",10,0
@@ -139,6 +148,32 @@ ChangeChar PROC
 
     ret
 ChangeChar ENDP
+
+ShowHowToMenu PROC
+    call Clrscr
+
+  mov edx, OFFSET bigText1
+    call WriteString
+    mov edx, OFFSET bigText2
+    call WriteString
+    mov edx, OFFSET bigText3
+    call WriteString
+    mov edx, OFFSET bigText4
+    call WriteString
+    mov edx, OFFSET bigText5
+    call WriteString
+    call WaitMsg
+   
+    mov eax, 10                 ; this is the x value
+    mov ebx, 10                 ; this is the y value
+    mov newChar, 'X'
+    call ChangeChar
+    call GetConsoleUi
+    
+    ret
+
+
+ShowHowToMenu ENDP
 
 GameOver PROC
     call Clrscr
