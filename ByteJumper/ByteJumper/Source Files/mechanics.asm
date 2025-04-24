@@ -6,7 +6,7 @@ INCLUDELIB kernel32.lib
 
 extern WriteConsoleW@20 : PROC  ;  declare external WinAPI
 extern GetStdHandle@4 : PROC
-
+extern timer : PROC
 
 ; SCREEN HEIGHT AND WIDTH
 ROWS = 25 ; Y
@@ -35,8 +35,10 @@ temp DWORD ? ; Previous Location
 gameBoard WORD ROWS * COLS DUP(' ') ; 
 msg BYTE "Loading Game...", 0   ; Null-terminated string
 ; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
-.code
 
+frameCount DWORD 0
+
+.code
 
 GameEngine PROC 
  ; Get console handle once
@@ -53,8 +55,15 @@ call SpawnPlayer
 
 testLoop_:
 
+; Timer
+inc frameCount
+cmp frameCount, 20
+jne skipTimerUpdate
+call timer
+mov frameCount, 0
+skipTimerUpdate:
 
-mov eax, 1    ; time in milliseconds
+mov eax, 0    ; time in milliseconds
 call Delay       ;  pauses program for 500 ms
 call GetCurrentFrame
 mov edx, 0   ; column
