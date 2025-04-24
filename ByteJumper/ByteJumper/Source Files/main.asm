@@ -18,7 +18,7 @@ extern GetConsoleMode@8 : PROC
 extern SetConsoleMode@8 : PROC
 extern SetConsoleTitleA@4: PROC
 extern GetConsoleUi@0 : PROC
-extern timer : PROC
+
 
 
 
@@ -62,11 +62,11 @@ main PROC
     ENABLE_EXTENDED_FLAGS  EQU 0x0080
    
     ; Game start 
-     call GameStart@0
+    call GameStart@0
     call GameEngine@0
     
   
-    ; call GameEngine@0
+  
      
     
     exit

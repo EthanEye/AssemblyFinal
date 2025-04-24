@@ -164,7 +164,7 @@
     <MASM Include="Source Files\readWriteProc.asm">
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Irvine\irvine</IncludePaths>
     </MASM>
-    <MASM Include="timer.asm">
+    <MASM Include="Source Files\timer.asm">
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Irvine\irvine</IncludePaths>
     </MASM>
   </ItemGroup>

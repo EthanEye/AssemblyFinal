@@ -2,9 +2,13 @@ INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
 INCLUDELIB kernel32.lib
 INCLUDELIB user32.lib
+EXTERN ChangeCharAt@0 : PROC
+
 .data
 isGrounded BYTE 1
-
+xCoord DWORD ?
+yCoord DWORD ?
+newChar WORD ?
 .code
 ; Player physics
 Jump PROC
@@ -16,7 +20,7 @@ mov isGrounded, 0 ; No longer grounded
 mov eax , xCoord
 mov ebx, yCoord
 mov newChar, ' '
-call ChangeCharAt
+call ChangeCharAt@0
 
 
 

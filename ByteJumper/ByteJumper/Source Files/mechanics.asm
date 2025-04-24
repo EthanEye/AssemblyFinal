@@ -6,7 +6,7 @@ INCLUDELIB kernel32.lib
 
 extern WriteConsoleW@20 : PROC  ;  declare external WinAPI
 extern GetStdHandle@4 : PROC
-extern timer : PROC
+extern Timer@0 : PROC
 EXTERN WriteConsoleW@20 : PROC  ;  declare external WinAPI
 EXTERN GetStdHandle@4 : PROC
 EXTERN SetConsoleCursorInfo@8 : PROC
@@ -47,13 +47,10 @@ msg BYTE "Loading Game...", 0   ; Null-terminated string
 inputStr BYTE 32 DUP(0)    ; reserve 32 bytes for output message ; Updated based on current input for debugging
 fpsBuffer DWORD ?
 fpsMsg BYTE "FPS: ", 0
+frameCount DWORD 0
 ; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
 ; PLAYER LOGIC
 isGrounded BYTE 1
-.code
-
-frameCount DWORD 0
-
 .code
 
 GameEngine PROC 
@@ -85,13 +82,7 @@ call StartPlatform
 call SpawnPlayer
 
 
-; Timer
-inc frameCount
-cmp frameCount, 20
-jne skipTimerUpdate
-call timer
-mov frameCount, 0
-skipTimerUpdate:
+
 
 mov eax, 0    ; time in milliseconds
 ; This is where the main game functions are called
@@ -100,10 +91,17 @@ mov eax, 1   ; time in milliseconds
 call Delay       ;  pauses program for 500 ms
 mov edx, 0   ; column
 mov ecx, 0     ; row
+; Timer
+inc frameCount
+cmp frameCount, 20
+jne skipTimerUpdate
+call Timer@0
+mov frameCount, 0
+skipTimerUpdate:
 call Gotoxy    ;  move the cursor
-call PrintPlayerPos
 call GetPlayerPos
 call GetCurrentFrame
+call PrintPlayerPos
 
 jmp mainLoop_
 exitTestLoop:

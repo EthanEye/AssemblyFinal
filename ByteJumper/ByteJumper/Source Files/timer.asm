@@ -1,12 +1,12 @@
 INCLUDE Irvine32.inc
-
+INCLUDELIB Irvine32.lib
 .data
 timerDisplay     BYTE "Time: ", 0
 digits       BYTE 12 DUP(0)
 timerCounter DWORD 0
 
 .code
-timer PROC C
+Timer PROC 
     ; Timer location
     mov dh, 0
     mov dl, 0
@@ -23,5 +23,5 @@ timer PROC C
     inc timerCounter
 
     ret
-timer ENDP
+Timer ENDP
 END timer
