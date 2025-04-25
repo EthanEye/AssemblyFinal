@@ -18,7 +18,14 @@ outputHandle DWORD ?
 tempChar WORD ?
 bytesWritten DWORD ?
 newChar WORD 2584h
-cornerChar WORD 
+; UNICODE FOR BOX FRAME
+topLeftChar WORD 9556h
+topRightChar WORD 9559h
+bottomLeftChar WORD 9562h
+bottomRightChar WORD 9565h
+vLineChar WORD 9553h
+hLineChar WORD 9555h
+
 gameBoard WORD ROWS * COLS DUP(' ') ;
 bigText1 BYTE " ______     __  __     ______   ______          __     __  __     __    __     ______   ______     ______    ", 10,0  
 bigText2 BYTE "/\  == \   /\ \_\ \   /\__  _\ /\  ___\        /\ \   /\ \/\ \   /\ -./  \    /\  == \ /\  ___\   /\  == \  ", 10,0 
@@ -29,11 +36,13 @@ bigText5 BYTE "  \/_____/   \/_____/     \/_/   \/_____/    \/_____/   \/_____/ 
 
 start BYTE "            How To Play: '?' ||| Start: 'Enter' ||| Quit: 'Esc'",10,0 
 
-howToPlay1 BYTE "                   HOW TO PLAY",10,0
-howToPlay2 BYTE "           MOVE: A(LEFT), D(RIGHT)",10,0
-howToPlay3 BYTE "           JUMP: SPACE BAR",10,0
-howToPlay4 BYTE "           LAND ON PLATFORMS TO SURVIVE",10,0
-howToPlay5 BYTE "           MISS A PLATFORM === GAME OVER",10,0
+howToPlay0 BYTE "+----------------------------------------------+",10,0
+howToPlay1 BYTE "|                  HOW TO PLAY                 |",10,0
+howToPlay2 BYTE "|           MOVE: A(LEFT), D(RIGHT)            |",10,0
+howToPlay3 BYTE "|           JUMP: SPACE BAR                    |",10,0
+howToPlay4 BYTE "|           LAND ON PLATFORMS TO SURVIVE       |",10,0
+howToPlay5 BYTE "|           MISS A PLATFORM === GAME OVER      |",10,0
+howToPlay6 BYTE "+----------------------------------------------+",10,0
 
 gameOverText1 BYTE "  ______    ______   __       __  ________         ______   __     __  ________  _______",10,0
 gameOverText2 BYTE " /      \  /      \ |  \     /  \|        \       /      \ |  \   |  \|        \|       \",10,0
@@ -66,11 +75,11 @@ GameStart PROC
     call WriteString
     call WaitMsg
    
-    mov eax, 10                 ; this is the x value
-    mov ebx, 10                 ; this is the y value
-    mov newChar, 'X'
-    call ChangeChar
-    call GetConsoleUi
+    ;mov eax, 10                 ; this is the x value
+    ;mov ebx, 10                 ; this is the y value
+    ;mov newChar, 9556h
+    ;call ChangeChar
+    ;call GetConsoleUi
     
     ret
     GameStart ENDP
@@ -151,24 +160,31 @@ ChangeChar ENDP
 
 ShowHowToMenu PROC
     call Clrscr
+    mov edx, OFFSET howToPlay0
+    call WriteString
+    mov edx, OFFSET howToPlay1
+    call WriteString
+    mov edx, OFFSET howToPlay2
+    call WriteString
+    mov edx, OFFSET howToPlay3
+    call WriteString
+    mov edx, OFFSET howToPlay4
+    call WriteString
+    mov edx, OFFSET howToPlay5
+    call WriteString
+    mov edx, OFFSET howToPlay6
+    call WriteString
 
-  mov edx, OFFSET bigText1
-    call WriteString
-    mov edx, OFFSET bigText2
-    call WriteString
-    mov edx, OFFSET bigText3
-    call WriteString
-    mov edx, OFFSET bigText4
-    call WriteString
-    mov edx, OFFSET bigText5
-    call WriteString
-    call WaitMsg
-   
-    mov eax, 10                 ; this is the x value
-    mov ebx, 10                 ; this is the y value
-    mov newChar, 'X'
-    call ChangeChar
-    call GetConsoleUi
+    ; Top Border
+  
+
+
+    ;mov  eax, 10                 ; this is the x value
+    ;mov  ebx, 10                 ; this is the y value
+    ;mov  topLeftChar, 9556h
+    ;call ChangeChar
+    ;call GetConsoleUi
+    
     
     ret
 
@@ -199,11 +215,11 @@ GameOver PROC
 
     call WaitMsg
    
-    mov eax, 10                 ; this is the x value
-    mov ebx, 10                 ; this is the y value
-    mov newChar, 'X'
-    call ChangeChar
-    call GetConsoleUi
+    ;mov eax, 10                 ; this is the x value
+   ; mov ebx, 10                 ; this is the y value
+   ; mov newChar, 'X'
+   ; call ChangeChar
+   ; call GetConsoleUi
     
     ret
 
