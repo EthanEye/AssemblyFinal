@@ -13,9 +13,14 @@ EXTERN SetInputMsg@0 : PROC
 EXTERN GetTickCount@0 : PROC
 EXTERN SetFpsBuffer@0 : PROC
 EXTERN Jump@0 : PROC
+; THREAD HANDLING
+EXTERN EnterCriticalSection@4 : PROC
+EXTERN LeaveCriticalSection@4 : PROC
+EXTERN InitializeCriticalSection@4 : PROC
 
 
 .data
+critSec DWORD 6 DUP(?)
 threadID DWORD ?
 threadHandle DWORD ?
 spaceStr BYTE "   (SPACE)    ", 0
@@ -31,7 +36,6 @@ fpsBuffer  BYTE "     FPS:", 0
 .code
 StartInputThread PROC
 
-  
     ; Create the thread
     push 0                  ; lpThreadId (optional)
     push 0                  ; dwCreationFlags (run immediately)
@@ -40,6 +44,8 @@ StartInputThread PROC
     push 0                  ; dwStackSize (default)
     push 0                  ; lpThreadAttributes (default)
     call CreateThread@24
+    push OFFSET critSec
+    call InitializeCriticalSection@4 ; Used for locking threads so only one can run at a time
 
     mov threadHandle, eax   ; store handle if needed
     ret
@@ -56,10 +62,19 @@ StartInputThread PROC
       ThreadLoop_:
      
     call FrameCounter
+    ; enter critical section
+    push OFFSET critSec
+    call EnterCriticalSection@4
+
+; -- protected code here --
     call OnSpacePress ; Check for SPACE being pressed
     call OnMoveLeft   ; Check for A being pressed
     call OnMoveRight  ; Check for D being pressed
-     ;
+    ; leave critical section
+    push OFFSET critSec
+    call LeaveCriticalSection@4
+   
+     
     mov eax, 1   ; time in milliseconds
     call Delay
     ; Main thread work

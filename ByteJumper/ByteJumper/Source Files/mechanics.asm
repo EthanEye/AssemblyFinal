@@ -4,17 +4,21 @@ INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
 INCLUDELIB kernel32.lib 
 
-extern WriteConsoleW@20 : PROC  ;  declare external WinAPI
-extern GetStdHandle@4 : PROC
-extern Timer@0 : PROC
+EXTERN WriteConsoleW@20 : PROC  ;  declare external WinAPI
+EXTERN Timer@0 : PROC
 EXTERN WriteConsoleW@20 : PROC  ;  declare external WinAPI
 EXTERN GetStdHandle@4 : PROC
 EXTERN SetConsoleCursorInfo@8 : PROC
 EXTERN StartInputThread@0 : PROC
+EXTERN StartPhysicsThread@0 : PROC
 
 ; SCREEN HEIGHT AND WIDTH
 ROWS = 25 ; Y
 COLS = 120 ; X  
+
+; PLAYER START POSITION
+STARTX = 56
+STARTY = 5
 
 ; SCREEN SIZE
 SCREENSIZE = ROWS * COLS
@@ -54,8 +58,12 @@ isGrounded BYTE 1
 .code
 
 GameEngine PROC 
-  ; Create new thread for player input
+ ; Create new thread for player input
+    call StartPhysicsThread@0
+ ; Create new thread for player input
     call StartInputThread@0
+
+
   ; Get console handle once
     push -11
     call GetStdHandle@4
@@ -81,32 +89,26 @@ GameEngine PROC
 call StartPlatform 
 call SpawnPlayer
 
-
-
-
 mov eax, 0    ; time in milliseconds
 ; This is where the main game functions are called
 mainLoop_:
 mov eax, 1   ; time in milliseconds
-call Delay       ;  pauses program for 500 ms
+call Delay       
 mov edx, 0   ; column
 mov ecx, 0     ; row
 ; Timer
 inc frameCount
 cmp frameCount, 20
 jne skipTimerUpdate
-call Timer@0
+;call Timer@0
 mov frameCount, 0
 skipTimerUpdate:
 call Gotoxy    ;  move the cursor
 call GetPlayerPos
 call GetCurrentFrame
 call PrintPlayerPos
-
 jmp mainLoop_
 exitTestLoop:
-
-
 ret
 GameEngine ENDP
 
@@ -145,8 +147,6 @@ skipSpace:
 endFill:
     ret
 GetCurrentFrame ENDP
-
-
 
 
 ; Converts array index into X, Y Coordinates
@@ -238,6 +238,13 @@ call GetLeftLegPos
 call GetRightLegPos 
 ret
 GetPlayerPos ENDP
+; Used by physics to alter player position
+GetPlayerXy PROC
+mov eax, xCoord
+mov ebx, yCoord
+ret
+GetPlayerXy ENDP
+
 
 ; Used to update player position from Input
 ; Parameters EAX = new X EBX = new Y
@@ -246,6 +253,12 @@ mov xCoord, eax
 mov yCoord, ebx
 ret
 SetPlayerPos ENDP
+; Used for updating char from different location
+; EDX = new char
+SetNewChar PROC
+mov newChar, dx
+ret
+SetNewChar ENDP
 
 ; Called from input.asm EDX = new message address
 SetInputMsg PROC
@@ -254,7 +267,7 @@ SetInputMsg PROC
     push esi
     push edi
 
-    mov esi, edx              ; source string
+    mov esi, edx             ; source string
     mov edi, OFFSET inputStr  ; destination buffer
     mov ecx, 32               ; max length (buffer size)
 
@@ -324,8 +337,8 @@ ret
 SetHeadPos ENDP
 
 SpawnPlayer PROC 
-mov eax, 56
-mov ebx, 5
+mov eax, STARTX
+mov ebx, STARTY
 mov xCoord, 56 ; Set player position from head Pos
 mov yCoord, 5 ; Set player position
 mov newChar, 1
@@ -400,6 +413,8 @@ call ChangeCharAt
 
 ret
 StartPlatform ENDP
+
+
 
 
 

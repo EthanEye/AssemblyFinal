@@ -19,16 +19,24 @@ tempChar WORD ?
 bytesWritten DWORD ?
 newChar WORD 2584h
 gameBoard WORD ROWS * COLS DUP('X') ;
-bigText1 BYTE " ______     __  __     ______   ______          __     __  __     __    __     ______   ______     ______    ", 10,0  
-bigText2 BYTE "/\  == \   /\ \_\ \   /\__  _\ /\  ___\        /\ \   /\ \/\ \   /\ -./  \    /\  == \ /\  ___\   /\  == \  ", 10,0 
-bigText3 BYTE "\ \  __<   \ \____ \  \/_/\ \/ \ \  __\       _\_\ \  \ \ \_\ \  \ \ \-./\ \  \ \  _-/ \ \  __\   \ \  __< " , 10,0 
-bigText4 BYTE " \ \_____\  \/\_____\    \ \_\  \ \_____\    /\_____\  \ \_____\  \ \_\ \ \_\  \ \_\    \ \_____\  \ \_\ \_\", 10, 0
-bigText5 BYTE "  \/_____/   \/_____/     \/_/   \/_____/    \/_____/   \/_____/   \/_/  \/_/   \/_/     \/_____/   \/_/ /_/ ", 10,0                                                                                                            
+bigText1 BYTE "        ______     __  __     ______   ______          __     __  __     __    __     ______   ______     ______    ", 10,0  
+bigText2 BYTE "       /\  == \   /\ \_\ \   /\__  _\ /\  ___\        /\ \   /\ \/\ \   /\ -./  \    /\  == \ /\  ___\   /\  == \  ", 10,0 
+bigText3 BYTE "       \ \  __<   \ \____ \  \/_/\ \/ \ \  __\       _\_\ \  \ \ \_\ \  \ \ \-./\ \  \ \  _-/ \ \  __\   \ \  __< " , 10,0 
+bigText4 BYTE "        \ \_____\  \/\_____\    \ \_\  \ \_____\    /\_____\  \ \_____\  \ \_\ \ \_\  \ \_\    \ \_____\  \ \_\ \_\", 10, 0
+bigText5 BYTE "         \/_____/   \/_____/     \/_/   \/_____/    \/_____/   \/_____/   \/_/  \/_/   \/_/     \/_____/   \/_/ /_/ ", 10,0                                                                                                            
 
 .code
 
 ; Welcome Screen Message, "Play Button", Title Screen, Rules etc...
 GameStart PROC
+    mov ecx, 0
+    centerScreen:
+    cmp ecx, 10
+    je endCenter_
+    call Crlf
+    inc ecx
+    jmp centerScreen
+    endCenter_:
     mov edx, OFFSET bigText1
     call WriteString
     mov edx, OFFSET bigText2
@@ -39,12 +47,12 @@ GameStart PROC
     call WriteString
     mov edx, OFFSET bigText5
     call WriteString
-    call WaitMsg
-   
-    mov eax, 10 ; this is the x value
-    mov ebx, 10 ; this is the y value
-    mov newChar, 2584h
-    call ChangeChar
+    mov eax, 3000   ; time in milliseconds
+    call Delay 
+    mov dh, 0
+    mov dl, 0
+    call Gotoxy      ; Clears the screen
+ 
     ;call GetConsoleUi
     
     ret
