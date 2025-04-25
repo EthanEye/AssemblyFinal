@@ -43,34 +43,170 @@ StartPhysicsThread PROC
   jmp movementLoop_
   ret
   UpdateMovement ENDP
+  
+  ; All inputs call this method to update player position
+  ; EDX = direction 1- DOWN 2 - UP, 3 LEFT, 4 RIGHT
+Movement PROC
+    call GetPlayerXy@0
 
-Jump PROC
-mov al, isGrounded
-cmp isGrounded, 1
-jne endJumpProc_
-isGrounded_:
-mov isGrounded, 0 ; No longer grounded
-call GetPlayerXy@0 ; Get players current position
-mov xCoord, eax
-mov yCoord, ebx
-mov eax , xCoord
-mov ebx, yCoord
-mov edx, ' '
-call SetNewChar@0
-call ChangeCharAt@0
-mov eax , xCoord
-mov ebx, yCoord
-inc ebx
-mov edx, 'O'
-call SetNewChar@0
-call ChangeCharAt@0
-; Jump Mechanics here
+    cmp edx, 2
+    jne Left_
+    Jump_:
+    ; 1. Get player position
+    call GetPlayerXy@0
+    mov xCoord, eax
+    mov yCoord, ebx
+
+    ; 2. Clear old position
+    mov ecx, ' '
+    call SetNewChar@0
+    call ChangeCharAt@0
+
+    ; 3. Move Up
+    inc yCoord
+
+    ; 4. Draw new position
+    mov ecx, 'O'
+    mov eax, xCoord
+    mov ebx, yCoord
+    call SetNewChar@0
+    call ChangeCharAt@0
+
+    ; 5. Save updated position
+    mov eax, xCoord
+    mov ebx, yCoord
+    call SetPlayerPos@0
+    call UpdatePlayerBody
 
 
 
-endJumpProc_:
+    Left_:
+    cmp edx, 3
+    jne Right_
+
+
+    Right_:
+    cmp edx, 4
+    jne endMovementProc_
+
+    endMovementProc_:
 ret
-Jump ENDP
+Movement ENDP
+
+UpdatePlayerBody PROC
+ ; 1. Get head position
+    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
+    mov xCoord, eax
+    mov yCoord, ebx
+
+    ; -------- Draw torso below head --------
+    mov eax, xCoord
+    mov ebx, yCoord
+    dec ebx                    ; torso = head Y + 1
+    mov ecx, '|'
+    call SetNewChar@0
+    call ChangeCharAt@0
+
+    ; -------- Clear one below torso --------
+    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
+    mov xCoord, eax
+    mov yCoord, ebx
+    sub ebx,2                  
+    mov ecx, ' '
+    call SetNewChar@0
+    call ChangeCharAt@0
+    ; Update right arm
+    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
+    mov xCoord, eax
+    mov yCoord, ebx
+
+    mov eax, xCoord
+    mov ebx, yCoord
+    dec ebx 
+    inc eax 
+    mov ecx, '\'
+    call SetNewChar@0
+    call ChangeCharAt@0
+
+    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
+    mov xCoord, eax
+    mov yCoord, ebx
+    sub ebx, 2
+    inc eax
+    mov ecx, ' '
+    call SetNewChar@0
+    call ChangeCharAt@0
+    ; Update left arm
+    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
+    mov xCoord, eax
+    mov yCoord, ebx
+
+    mov eax, xCoord
+    mov ebx, yCoord
+    dec ebx
+    dec eax 
+    mov ecx, '/'
+    call SetNewChar@0
+    call ChangeCharAt@0
+
+    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
+    mov xCoord, eax
+    mov yCoord, ebx
+    sub ebx, 2
+    dec eax
+    mov ecx, ' '
+    call SetNewChar@0
+    call ChangeCharAt@0
+    ; Update right leg
+    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
+    mov xCoord, eax
+    mov yCoord, ebx
+
+    mov eax, xCoord
+    mov ebx, yCoord
+    sub ebx, 2
+    inc eax 
+    mov ecx, '\'
+    call SetNewChar@0
+    call ChangeCharAt@0
+
+    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
+    mov xCoord, eax
+    mov yCoord, ebx
+    sub ebx, 3
+    inc eax
+    mov ecx, ' '
+    call SetNewChar@0
+    call ChangeCharAt@0
+
+; Update left leg
+    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
+    mov xCoord, eax
+    mov yCoord, ebx
+
+    mov eax, xCoord
+    mov ebx, yCoord
+    sub ebx, 2
+    dec eax 
+    mov ecx, '/'
+    call SetNewChar@0
+    call ChangeCharAt@0
+
+    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
+    mov xCoord, eax
+    mov yCoord, ebx
+    sub ebx, 3
+    dec eax
+    mov ecx, ' '
+    call SetNewChar@0
+    call ChangeCharAt@0
+
+
+
+    ret
+UpdatePlayerBody ENDP
+
+
 
 MoveLeft PROC
 

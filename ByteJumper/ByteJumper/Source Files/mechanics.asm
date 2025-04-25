@@ -104,7 +104,6 @@ jne skipTimerUpdate
 mov frameCount, 0
 skipTimerUpdate:
 call Gotoxy    ;  move the cursor
-call GetPlayerPos
 call GetCurrentFrame
 call PrintPlayerPos
 jmp mainLoop_
@@ -228,16 +227,7 @@ ChangeCharAt ENDP
 
 
 ; Keeps track of each part of player character
-GetPlayerPos PROC
 
-call GetHeadPos
-call GetRightArmPos
-call GetLeftArmPos
-call GetTorsoPos
-call GetLeftLegPos
-call GetRightLegPos 
-ret
-GetPlayerPos ENDP
 ; Used by physics to alter player position
 GetPlayerXy PROC
 mov eax, xCoord
@@ -254,9 +244,9 @@ mov yCoord, ebx
 ret
 SetPlayerPos ENDP
 ; Used for updating char from different location
-; EDX = new char
+; ECX = new char
 SetNewChar PROC
-mov newChar, dx
+mov newChar, cx
 ret
 SetNewChar ENDP
 
@@ -289,59 +279,16 @@ SetFpsBuffer PROC
 mov fpsBuffer, edx 
 ret
 SetFpsBuffer ENDP
-; Called first updates coordinate relative to (player input)
-; Input checks for movement -> Set Player Position is called every ms - > 
-; GetPlayerPos called every ms -> character follows head pos
-GetHeadPos PROC
-
-ret
-GetHeadPos ENDP
-; Called second updates coordinate relative to head (down 1 right 1)
-GetRightArmPos PROC
 
 
-ret
-GetRightArmPos ENDP
 
-; Called third updates coordinate relative to head (down 1 left 1)
-GetLeftArmPos PROC
-
-ret
-GetLeftArmPos ENDP
-
-; Called fourth updates coordinate relative to head (down 1)
-GetTorsoPos PROC
-
-
-ret
-GetTorsoPos ENDP
-
-; Called fifth updates coordinate relative to torso down (1 left 1)
-GetLeftLegPos PROC
-
-
-ret
-GetLeftLegPos ENDP
-
-; Called sixth updates coordinate relative to torso down (1 right 1)
-GetRightLegPos PROC
-
-
-ret
-GetRightLegPos ENDP
-
-; Head position updated from input.asm and then Getplayer position will update body relative to head
-SetHeadPos PROC
-
-ret
-SetHeadPos ENDP
 
 SpawnPlayer PROC 
 mov eax, STARTX
 mov ebx, STARTY
 mov xCoord, 56 ; Set player position from head Pos
 mov yCoord, 5 ; Set player position
-mov newChar, 1
+mov newChar, 'O'
 call ChangeCharAt
 mov eax, 56
 mov ebx, 4
@@ -413,13 +360,4 @@ call ChangeCharAt
 
 ret
 StartPlatform ENDP
-
-
-
-
-
-
-
-
-
 END

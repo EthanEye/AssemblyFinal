@@ -11,13 +11,13 @@ INCLUDELIB Irvine32.lib
 INCLUDELIB kernel32.lib
 INCLUDELIB user32.lib
 
-extern GameStart@0 : near
-extern GameEngine@0 : near
-extern GetStdHandle@4 : PROC
-extern GetConsoleMode@8 : PROC
-extern SetConsoleMode@8 : PROC
-extern SetConsoleTitleA@4: PROC
-extern GetConsoleUi@0 : PROC
+EXTERN GameStart@0 : near
+EXTERN GameEngine@0 : near
+EXTERN GetStdHandle@4 : PROC
+EXTERN GetConsoleMode@8 : PROC
+EXTERN SetConsoleMode@8 : PROC
+EXTERN SetConsoleTitleA@4: PROC
+EXTERN GetConsoleUi@0 : PROC
 
 
 

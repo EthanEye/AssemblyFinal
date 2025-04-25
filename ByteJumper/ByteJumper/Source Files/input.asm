@@ -8,11 +8,10 @@ INCLUDELIB kernel32.lib
 INCLUDELIB user32.lib
 EXTERN GetAsyncKeyState@4 : PROC
 EXTERN CreateThread@24 : PROC
-EXTERN SetPlayerPos@0 : PROC
 EXTERN SetInputMsg@0 : PROC
 EXTERN GetTickCount@0 : PROC
 EXTERN SetFpsBuffer@0 : PROC
-EXTERN Jump@0 : PROC
+EXTERN Movement@0 : PROC
 ; THREAD HANDLING
 EXTERN EnterCriticalSection@4 : PROC
 EXTERN LeaveCriticalSection@4 : PROC
@@ -55,9 +54,7 @@ StartInputThread PROC
 
  PlayerInput PROC
     ; Player start head position
-    mov eax, 5
-    mov ebx, 56
-    call SetPlayerPos@0
+   
     ; Thread loop is here
       ThreadLoop_:
      
@@ -90,8 +87,9 @@ OnSpacePress PROC
     test ax, 8000h         ; check high bit (key currently down)
     jz noSpace_
 
-    ; Call jump proc in mechanics.asm
-    call Jump@0
+    ; Call movement proc in mechanics.asm
+    mov edx, 2 ; EDX is direction to go 
+    call Movement@0
     mov edx, offset spaceStr
     call SetInputMsg@0 ; Update input message to "SPACE"
     noSpace_:
@@ -106,10 +104,8 @@ OnMoveLeft PROC
     ; Return value in AX (low bit = 1 if pressed)
     test ax, 8000h         ; check high bit (key currently down)
     jz notLeft_
-
- 
-    ; Do something here
-
+    mov edx, 3 ; EDX is direction to go 
+    call Movement@0
   
     mov edx, offset leftStr
     call SetInputMsg@0 ; Update input message to "LEFT KEY"
@@ -124,9 +120,8 @@ OnMoveRight PROC
     ; Return value in AX (low bit = 1 if pressed)
     test ax, 8000h         ; check high bit (key currently down)
     jz notRight_
-
-    ; Do something here
-
+    mov edx, 4 ; EDX is direction to go 
+    call Movement@0
     mov edx, offset rightStr
     call SetInputMsg@0 ; Update input message to "RIGHT KEY"
     notRight_:
