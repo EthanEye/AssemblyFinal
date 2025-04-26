@@ -9,6 +9,7 @@ EXTERN SetPlayerPos@0 : PROC
 EXTERN CreateThread@24 : PROC
 .data
 isGrounded BYTE 1
+direction DWORD 4 dup(?)
 xCoord DWORD ?
 yCoord DWORD ?
 newChar WORD ?
@@ -47,8 +48,9 @@ StartPhysicsThread PROC
   ; All inputs call this method to update player position
   ; EDX = direction 1- DOWN 2 - UP, 3 LEFT, 4 RIGHT
 Movement PROC
-    call GetPlayerXy@0
 
+   
+    call GetPlayerXy@0
     cmp edx, 2
     jne Left_
     Jump_:
@@ -77,19 +79,49 @@ Movement PROC
     mov ebx, yCoord
     call SetPlayerPos@0
     call UpdatePlayerBody
-
-
-
+   
     Left_:
     cmp edx, 3
     jne Right_
-
-
-    Right_:
+    ; 1. Get player position
+    call GetPlayerXy@0
+    mov xCoord, eax
+    mov yCoord, ebx
+    ; 2. Clear old position
+    mov ecx, ' '
+    call SetNewChar@0
+    call ChangeCharAt@0
+    ; Move left
+    dec xCoord
+    ; 4. Draw new position
+    mov ecx, 'O'
+    mov eax, xCoord
+    mov ebx, yCoord
+    call SetNewChar@0
+    call ChangeCharAt@0
+    ; 5. Save updated position
+    mov eax, xCoord
+    mov ebx, yCoord
+    call SetPlayerPos@0
+    call UpdatePlayerBody
+    mov ecx, ' '
+    call GetPlayerXy@0
+    add eax, 2
+    sub ebx, 1
+    call SetNewChar@0
+    call ChangeCharAt@0
+    call GetPlayerXy@0
+    add eax, 2
+    sub ebx, 2
+    call SetNewChar@0
+    call ChangeCharAt@0
     cmp edx, 4
     jne endMovementProc_
+    Right_:
+    
 
     endMovementProc_:
+    mov edx, 0
 ret
 Movement ENDP
 
