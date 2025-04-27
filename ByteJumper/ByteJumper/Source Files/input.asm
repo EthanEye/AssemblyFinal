@@ -1,6 +1,6 @@
 ;----------------------------
 
-; :INPUT
+; INPUT
 ;----------------------------
 INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
@@ -22,9 +22,9 @@ EXTERN InitializeCriticalSection@4 : PROC
 critSec DWORD 6 DUP(?)
 threadID DWORD ?
 threadHandle DWORD ?
-spaceStr BYTE "   (SPACE)    ", 0
-leftStr BYTE " (LEFT KEY)    ", 0
-rightStr BYTE"(RIGHT KEY)    ", 0
+spaceStr BYTE "    SPACE    ", 0
+leftStr BYTE "  LEFT KEY    ", 0
+rightStr BYTE" RIGHT KEY    ", 0
 
 prevTick   DWORD ?
 currTick   DWORD ?

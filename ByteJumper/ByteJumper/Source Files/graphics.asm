@@ -2,8 +2,8 @@ INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
 INCLUDELIB kernel32.lib 
 
-extern WriteConsoleW@20 : PROC  ;  declare external WinAPI
-extern GetStdHandle@4 : PROC
+EXTERN WriteConsoleW@20 : PROC  ;  declare external WinAPI
+EXTERN GetStdHandle@4 : PROC
 
 
 ; SCREEN HEIGHT AND WIDTH
@@ -20,7 +20,7 @@ bytesWritten DWORD ?
 newChar WORD 2584h
 gameBoard WORD ROWS * COLS DUP('X') ;
 bigText1 BYTE "        ______     __  __     ______   ______          __     __  __     __    __     ______   ______     ______    ", 10,0  
-bigText2 BYTE "       /\  == \   /\ \_\ \   /\__  _\ /\  ___\        /\ \   /\ \/\ \   /\ -./  \    /\  == \ /\  ___\   /\  == \  ", 10,0 
+bigText2 BYTE "       /\  == \   /\ \_\ \   /\__  _\ /\  ___\        /\ \   /\ \/\ \   /\ -./ \ \   /\  == \ /\  ___\   /\  == \  ", 10,0 
 bigText3 BYTE "       \ \  __<   \ \____ \  \/_/\ \/ \ \  __\       _\_\ \  \ \ \_\ \  \ \ \-./\ \  \ \  _-/ \ \  __\   \ \  __< " , 10,0 
 bigText4 BYTE "        \ \_____\  \/\_____\    \ \_\  \ \_____\    /\_____\  \ \_____\  \ \_\ \ \_\  \ \_\    \ \_____\  \ \_\ \_\", 10, 0
 bigText5 BYTE "         \/_____/   \/_____/     \/_/   \/_____/    \/_____/   \/_____/   \/_/  \/_/   \/_/     \/_____/   \/_/ /_/ ", 10,0                                                                                                            

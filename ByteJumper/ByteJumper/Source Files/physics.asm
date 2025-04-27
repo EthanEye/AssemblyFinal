@@ -3,30 +3,38 @@ INCLUDELIB Irvine32.lib
 INCLUDELIB kernel32.lib
 INCLUDELIB user32.lib
 EXTERN ChangeCharAt@0 : PROC
+EXTERN GetCharAt@0 : PROC
 EXTERN GetPlayerXy@0 : PROC
 EXTERN SetNewChar@0 : PROC
 EXTERN SetPlayerPos@0 : PROC
 EXTERN CreateThread@24 : PROC
+EXTERN GroundCheckMsg@0 : PROC
+
+GRAVITY_DURATION = 100 
+JUMP_DURATION = 10
+; PHYSICS THREAD
+
 .data
+isJumping BYTE 0
 isGrounded BYTE 1
 direction DWORD 4 dup(?)
 xCoord DWORD ?
 yCoord DWORD ?
 newChar WORD ?
 textMsg BYTE "Test"
-; PHYSICS THREAD
+; GAME PHYSICS
+
 threadID DWORD ?
 threadHandle DWORD ?
 .code
 
 StartPhysicsThread PROC
 
-  
     ; Create the thread
     push 0                  ; lpThreadId (optional)
     push 0                  ; dwCreationFlags (run immediately)
     push 0                  ; lpParameter (none)
-    push OFFSET UpdateMovement ; lpStartAddress
+    push OFFSET Gravity ; lpStartAddress
     push 0                  ; dwStackSize (default)
     push 0                  ; lpThreadAttributes (default)
     call CreateThread@24
@@ -35,25 +43,47 @@ StartPhysicsThread PROC
   StartPhysicsThread ENDP
 
 
-  UpdateMovement PROC
+  Gravity PROC
 
-  movementLoop_:
-
-  mov eax, 1   ; time in milliseconds
+  gravityLoop_:
+  mov eax, GRAVITY_DURATION   ; time in milliseconds
   call Delay
-  jmp movementLoop_
+  ; Check if jumping
+  mov dl, [isJumping]
+  cmp dl, 1
+  jne normalGravity_ 
+  ; If jumping count down Jump duration and then switch gravity back on
+  mov ecx, 0 
+  jumping_:
+  call GroundCheck
+  cmp ecx, JUMP_DURATION
+  je resetGravity_
+  inc ecx
+  jmp jumping_ 
+
+  normalGravity_:
+  ; If not jumping first check if player is grounded
+  call GroundCheck
+  jmp gravityLoop_
+
+  resetGravity_:
+  mov isJumping, 1
+  jmp gravityLoop_
+  
+
   ret
-  UpdateMovement ENDP
+  Gravity ENDP
   
   ; All inputs call this method to update player position
   ; EDX = direction 1- DOWN 2 - UP, 3 LEFT, 4 RIGHT
 Movement PROC
 
-   
+    mov direction, edx
     call GetPlayerXy@0
+    Jump_:
     cmp edx, 2
     jne Left_
-    Jump_:
+    mov isJumping, 1
     ; 1. Get player position
     call GetPlayerXy@0
     mov xCoord, eax
@@ -115,15 +145,46 @@ Movement PROC
     sub ebx, 2
     call SetNewChar@0
     call ChangeCharAt@0
+    Right_:
     cmp edx, 4
     jne endMovementProc_
-    Right_:
-    
+    ; 1. Get player position
+    call GetPlayerXy@0
+    mov xCoord, eax
+    mov yCoord, ebx
+    ; 2. Clear old position
+    mov ecx, ' '
+    call SetNewChar@0
+    call ChangeCharAt@0
+    ; 3. Move right
+    inc XCoord
+    ; 4. Draw new position
+    mov ecx, 'O'
+    mov eax, xCoord
+    mov ebx, yCoord
+    call SetNewChar@0
+    call ChangeCharAt@0
+    ; 5. Save updated position
+    mov eax, xCoord
+    mov ebx, yCoord
+    call SetPlayerPos@0
+    call UpdatePlayerBody
+    mov ecx, ' '
+    call GetPlayerXy@0
+    sub eax, 2
+    sub ebx, 1
+    call SetNewChar@0
+    call ChangeCharAt@0
+    call GetPlayerXy@0
+    sub eax, 2
+    sub ebx, 2
+    call SetNewChar@0
+    call ChangeCharAt@0
 
     endMovementProc_:
     mov edx, 0
-ret
-Movement ENDP
+    ret
+    Movement ENDP
 
 UpdatePlayerBody PROC
  ; 1. Get head position
@@ -159,7 +220,7 @@ UpdatePlayerBody PROC
     mov ecx, '\'
     call SetNewChar@0
     call ChangeCharAt@0
-
+    
     call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
     mov xCoord, eax
     mov yCoord, ebx
@@ -201,7 +262,10 @@ UpdatePlayerBody PROC
     mov ecx, '\'
     call SetNewChar@0
     call ChangeCharAt@0
-
+     
+    mov edx, direction
+    cmp edx, 2 ; For jumping
+    jne skipReplace1_
     call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
     mov xCoord, eax
     mov yCoord, ebx
@@ -210,6 +274,7 @@ UpdatePlayerBody PROC
     mov ecx, ' '
     call SetNewChar@0
     call ChangeCharAt@0
+    skipReplace1_:
 
 ; Update left leg
     call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
@@ -223,7 +288,10 @@ UpdatePlayerBody PROC
     mov ecx, '/'
     call SetNewChar@0
     call ChangeCharAt@0
-
+    
+    mov edx, direction
+    cmp edx, 2 ; For jumping
+    jne skipReplace2_
     call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
     mov xCoord, eax
     mov yCoord, ebx
@@ -232,23 +300,42 @@ UpdatePlayerBody PROC
     mov ecx, ' '
     call SetNewChar@0
     call ChangeCharAt@0
-
-
-
+    skipReplace2_:
     ret
 UpdatePlayerBody ENDP
 
+; DX = 1 if player is touching ground DX = 0 if player not touching ground
+GroundCheck PROC
+    call GetPlayerXy@0               ; EAX = x (head), EBX = y (head)
+    sub ebx, 3
+    call GetCharAt@0
+    ; Check for ground
+    cmp ax, 2588h 
+    je isGrounded_
+    
+    call GetPlayerXy@0           ; Check down 3 right one
+    sub ebx, 3
+    inc eax
+    call GetCharAt@0
+    cmp ax, 2588h 
+    je isGrounded_
 
-
-MoveLeft PROC
-
+    call GetPlayerXy@0           ; Check down 3 left one
+    sub ebx, 3
+    dec eax
+    call GetCharAt@0
+    cmp ax, 2588h 
+    je isGrounded_
+    jmp notGrounded_
+    isGrounded_:
+    mov dl, 1                  ; Is Grounded
+    jmp endGroundCheck_
+    notGrounded_:
+    mov dl, 0                  ; Not Grounded
+    endGroundCheck_:
+    call GroundCheckMsg@0
 ret
-MoveLeft ENDP
+GroundCheck ENDP
 
 
-
-MoveRight PROC
-
-ret
-MoveRight ENDP
 END 

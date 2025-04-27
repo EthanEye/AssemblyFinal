@@ -42,19 +42,19 @@ row WORD 0
 col WORD 0
 newChar WORD 2584h
 ; STRINGS AND CHARACTERS
-commaStr DWORD " , ", 0
-leftPrt DWORD " ( ", 0
-rightPrt DWORD " ) ", 0
+commaStr DWORD ",", 0
+leftPrt DWORD " =X ", 0
+rightPrt DWORD " =Y ", 0
 temp DWORD ? ; Previous Location
+; DISPLAY ARRAY
 gameBoard WORD ROWS * COLS DUP(' ') ; 
 msg BYTE "Loading Game...", 0   ; Null-terminated string
 inputStr BYTE 32 DUP(0)    ; reserve 32 bytes for output message ; Updated based on current input for debugging
 fpsBuffer DWORD ?
-fpsMsg BYTE "FPS: ", 0
+fpsMsg BYTE " FPS: ", 0
 frameCount DWORD 0
 ; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
-; PLAYER LOGIC
-isGrounded BYTE 1
+checkGrounded BYTE 1
 .code
 
 GameEngine PROC 
@@ -89,20 +89,13 @@ GameEngine PROC
 call StartPlatform 
 call SpawnPlayer
 
-mov eax, 0    ; time in milliseconds
+
 ; This is where the main game functions are called
 mainLoop_:
 mov eax, 1   ; time in milliseconds
 call Delay       
 mov edx, 0   ; column
 mov ecx, 0     ; row
-; Timer
-inc frameCount
-cmp frameCount, 20
-jne skipTimerUpdate
-;call Timer@0
-mov frameCount, 0
-skipTimerUpdate:
 call Gotoxy    ;  move the cursor
 call GetCurrentFrame
 call PrintPlayerPos
@@ -173,32 +166,40 @@ GetCurrentFrame ENDP
 
 ; Print coordinate given (EAX = x EBX = y)
 PrintPlayerPos PROC
+mov eax, green       ; Set EAX to green color
+call SetTextColor
+; Start location
+mov dh, 0
+mov dl, 80
+call Gotoxy
 mov edx, offset leftPrt
 call WriteString
 mov eax, xCoord 
 call WriteInt
-mov edx, offset commaStr
+mov edx, offset rightPrt
 call WriteString
 mov eax, yCoord
 call WriteInt
-mov edx, offset rightPrt
-call WriteString
 ; FPS TEXT
-mov edx, offset leftPrt
-call WriteString
 mov edx, offset fpsMsg
 call WriteString
 mov eax, fpsBuffer
 call WriteDec
-mov edx, offset rightPrt
-call WriteString
 ; INPUT TEXT
 mov edx, offset inputStr
 call WriteString
-; FPS TEXT
-
-
-
+; GROUND CHECK
+movzx eax, BYTE PTR checkGrounded
+call writeDec
+;TIMER
+inc frameCount
+cmp frameCount, 20
+jne skipTimerUpdate
+call Timer@0
+mov frameCount, 0
+skipTimerUpdate:
+mov eax, white
+call SetTextColor
 ret
 
 PrintPlayerPos ENDP
@@ -221,7 +222,6 @@ ChangeCharAt PROC
     ; Write new character to gameBoard
     mov ax, newChar
     mov WORD PTR gameBoard[edx], ax
-
     ret
 ChangeCharAt ENDP
 
@@ -234,6 +234,25 @@ mov eax, xCoord
 mov ebx, yCoord
 ret
 GetPlayerXy ENDP
+
+GetCharAt PROC
+; Flip Y: edx = ROWS - ebx
+    mov edx, ROWS
+    sub edx, ebx              ; flippedY
+
+    ; Calculate index = (flippedY * COLS) + X
+    imul edx, COLS            ; edx = row * COLS
+    add edx, eax              ; edx = (row * COLS) + col
+
+    ; Scale index for WORD array (2 bytes per element)
+    shl edx, 1                ; edx = edx * 2
+
+    ; Load char at X, Y into ax
+    
+    mov ax, WORD PTR gameBoard[edx]
+
+ret
+GetCharAt ENDP
 
 
 ; Used to update player position from Input
@@ -279,6 +298,18 @@ SetFpsBuffer PROC
 mov fpsBuffer, edx 
 ret
 SetFpsBuffer ENDP
+
+GroundCheckMsg PROC
+    cmp dl, 1                           ; Check for ground
+    jne notGrounded_
+    isGrounded_:
+    mov checkGrounded, 1                   ; Is Grounded
+    jmp endGroundCheck_
+    notGrounded_:
+    mov checkGrounded, 0                   ; Not Grounded
+    endGroundCheck_:
+ret
+GroundCheckMsg ENDP
 
 
 
