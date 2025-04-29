@@ -49,12 +49,15 @@ temp DWORD ? ; Previous Location
 ; DISPLAY ARRAY
 gameBoard WORD ROWS * COLS DUP(' ') ; 
 msg BYTE "Loading Game...", 0   ; Null-terminated string
-inputStr BYTE 32 DUP(0)    ; reserve 32 bytes for output message ; Updated based on current input for debugging
+groundedMsg BYTE " Grounded: ", 0
+jumpingMsg BYTE " Jumping: " , 0
+inputStr BYTE 32 DUP(0)         ; reserve 32 bytes for output message ; Updated based on current input for debugging
 fpsBuffer DWORD ?
 fpsMsg BYTE " FPS: ", 0
 frameCount DWORD 0
-; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
-checkGrounded BYTE 1
+                                ; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
+checkGrounded BYTE 1            ; Updated from physics.asm make sure its set to 1
+checkJumping BYTE 0             ;Updated from physics.asm
 .code
 
 GameEngine PROC 
@@ -170,7 +173,7 @@ mov eax, green       ; Set EAX to green color
 call SetTextColor
 ; Start location
 mov dh, 0
-mov dl, 80
+mov dl, 40
 call Gotoxy
 mov edx, offset leftPrt
 call WriteString
@@ -189,8 +192,16 @@ call WriteDec
 mov edx, offset inputStr
 call WriteString
 ; GROUND CHECK
+mov edx, offset groundedMsg
+call WriteString
 movzx eax, BYTE PTR checkGrounded
 call writeDec
+; JUMPING CHECK
+mov edx, offset jumpingMsg
+call WriteString
+movzx eax, BYTE PTR checkJumping
+call writeDec
+
 ;TIMER
 inc frameCount
 cmp frameCount, 20
@@ -300,7 +311,7 @@ ret
 SetFpsBuffer ENDP
 
 GroundCheckMsg PROC
-    cmp dl, 1                           ; Check for ground
+    cmp dl, 1                              ; Check for ground
     jne notGrounded_
     isGrounded_:
     mov checkGrounded, 1                   ; Is Grounded
@@ -311,6 +322,17 @@ GroundCheckMsg PROC
 ret
 GroundCheckMsg ENDP
 
+JumpCheckingMsg PROC
+    cmp dl, 1                              ; Check if jumping 
+    jne notJumping_
+    isJumping_:
+    mov checkJumping, 1                   ; Is jumping 
+    jmp endJumpingCheck_
+    notJumping_:
+    mov checkJumping, 0                   ; Not jumping
+    endJumpingCheck_:
+ret
+JumpCheckingMsg ENDP
 
 
 
