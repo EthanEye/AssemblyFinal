@@ -15,6 +15,7 @@ extern SetConsoleTitleA@4: PROC
 extern GetConsoleUi@0 : PROC
 extern GameOver@0 : near
 extern ShowHowToMenu@0 : near
+extern DisplayPlatform@0 : near
 
 
 .data
@@ -59,7 +60,9 @@ main PROC
     ; Game start 
      call GameStart@0
 
-     call ShowHowToMenu@0
+     ;call ShowHowToMenu@0
+
+     call DisplayPlatform@0
 
     
   
