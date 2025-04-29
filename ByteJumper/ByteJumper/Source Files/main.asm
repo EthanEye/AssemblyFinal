@@ -16,6 +16,7 @@ extern GetConsoleUi@0 : PROC
 extern GameOver@0 : near
 extern ShowHowToMenu@0 : near
 extern DisplayPlatform@0 : near
+extern GameOver@0 : near
 
 
 .data
@@ -69,7 +70,8 @@ main PROC
     ; call GameEngine@0
 
     ; Game over
-     ;call GameOver@0
+     call GameOver@0
+    
      
     
     exit
