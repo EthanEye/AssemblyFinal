@@ -46,54 +46,74 @@ StartPhysicsThread PROC
 
 
  Gravity PROC
- groundCheckLoop_:
-   
+    mov eax, 2000
+    call Delay
+groundCheckLoop_:
+    mov eax, 1
+    call Delay
     call GroundCheck
     mov dl, isGrounded
     call GroundCheckMsg@0
-    mov eax, 1
-    call Delay
+    cmp dl, 1
+    je groundCheckLoop_
     mov dl, isJumping
     call JumpCheckingMsg@0
     cmp dl, 1
     jne applyGravity_
+
+    ; --- Jumping Loop ---
     mov ecx, 0
-    ; This is where jumping loop happens
-    ; Need a seperate thread for this
-    noGravity_:
+noGravity_:
     push ecx
-    cmp ecx, 6 ; Jump height
+    cmp ecx, 6             ; Jump height limit
     je endJump_
+
     call GroundCheck
     mov dl, isGrounded
     cmp dl, 1
     je endJump_
-    ; JUMP MOVEMENT NEED TO FIX
+
+    ; Delay increases as you go up
     mov eax, ecx
-    imul eax, ecx        ; eax = ecx
-    imul eax, 2          ; adjust scale 
-    add eax, 1         ; base delay
+    imul eax, ecx          ; eax = ecx * ecx
+    imul eax, 2            ; scale adjustment
+    add eax, 1             ; base delay
     call Delay
-    mov edx, 2 ; EDX is direction to go up
+
+    mov edx, 2             ; 2 = direction UP
     call JumpProc
+
     pop ecx
     inc ecx
     jmp noGravity_
-    
-    applyGravity_:
+
+applyGravity_:
+    ; Check jumping status again before moving down
+    mov dl, isJumping
+    cmp dl, 1
+    je groundCheckLoop_   ; if still jumping, skip applying gravity
+
     call GroundCheck
     mov dl, isGrounded
     cmp dl, 1
-    je groundCheckLoop_
-    ; Move player down to simulate gravity
+    je groundCheckLoop_   ; if grounded, skip applying gravity
 
-    jmp groundCheckLoop_
-    endJump_:
-    mov isJumping, 0
-    jmp groundCheckLoop_
+    mov eax, 1
+    call Delay
+
+    ;  Check again before moving
     
+
+    call GravityProc      ; only now move down
+    jmp groundCheckLoop_
+
+endJump_:
+    mov isJumping, 0        ; Reset jumping state
+    jmp groundCheckLoop_
+
 ret
 Gravity ENDP
+
 
 
   
@@ -373,9 +393,6 @@ endGroundCheck_:
 GroundCheck ENDP
 
 JumpProc PROC
-mov direction, edx
-    call GetPlayerXy@0
-    Jump_:
     ; 1. Get player position
     call GetPlayerXy@0
     mov xCoord, eax
@@ -404,6 +421,20 @@ mov direction, edx
 
 ret
 JumpProc ENDP
+
+GravityProc PROC
+
+
+
+
+
+
+
+ret
+GravityProc ENDP
+
+
+
 
 
 END 

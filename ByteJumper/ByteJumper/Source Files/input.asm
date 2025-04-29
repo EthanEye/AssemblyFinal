@@ -53,13 +53,16 @@ StartInputThread PROC
 
 
  PlayerInput PROC
-    ; Player start head position
-   
+    ; Wait for game to load
+    mov eax, 2000
+    call Delay
     ; Thread loop is here
       ThreadLoop_:
      
     call FrameCounter
     ; enter critical section
+    
+   
     push OFFSET critSec
     call EnterCriticalSection@4
 
