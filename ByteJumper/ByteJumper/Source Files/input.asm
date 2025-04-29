@@ -54,7 +54,7 @@ StartInputThread PROC
 
  PlayerInput PROC
     ; Wait for game to load
-    mov eax, 2000
+    mov eax, 1000
     call Delay
     ; Thread loop is here
       ThreadLoop_:

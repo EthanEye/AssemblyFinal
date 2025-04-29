@@ -17,6 +17,7 @@ JUMP_DURATION = 2
 ; PHYSICS THREAD
 
 .data
+gravityDelay DWORD 80   ; initial delay time (ms)
 isJumping BYTE 0
 isGrounded BYTE 1
 direction DWORD 4 dup(?)
@@ -46,7 +47,7 @@ StartPhysicsThread PROC
 
 
  Gravity PROC
-    mov eax, 2000
+    mov eax, 1000
     call Delay
 groundCheckLoop_:
     mov eax, 1
@@ -65,7 +66,7 @@ groundCheckLoop_:
     mov ecx, 0
 noGravity_:
     push ecx
-    cmp ecx, 6             ; Jump height limit
+    cmp ecx, 8             ; Jump height limit
     je endJump_
 
     call GroundCheck
@@ -82,12 +83,13 @@ noGravity_:
 
     mov edx, 2             ; 2 = direction UP
     call JumpProc
-
+   
     pop ecx
     inc ecx
     jmp noGravity_
 
 applyGravity_:
+    
     ; Check jumping status again before moving down
     mov dl, isJumping
     cmp dl, 1
@@ -98,17 +100,24 @@ applyGravity_:
     cmp dl, 1
     je groundCheckLoop_   ; if grounded, skip applying gravity
 
-    mov eax, 1
+    mov eax, gravityDelay
     call Delay
 
     ;  Check again before moving
-    
-
     call GravityProc      ; only now move down
+
+    ; Decrease delay (faster fall)
+    mov eax, gravityDelay
+    sub eax, 15                ; decrease by 5 ms each time
+    cmp eax, 10               ; limit: don't go below 20ms
+    jl skipUpdate
+    mov gravityDelay, eax
+    skipUpdate:
     jmp groundCheckLoop_
 
 endJump_:
     mov isJumping, 0        ; Reset jumping state
+    mov gravityDelay, 80   ; Reset gravity delay
     jmp groundCheckLoop_
 
 ret
@@ -271,7 +280,6 @@ UpdatePlayerBody PROC
     call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
     mov xCoord, eax
     mov yCoord, ebx
-    sub ebx, 2
     inc eax
     mov ecx, ' '
     call SetNewChar@0
@@ -292,7 +300,6 @@ UpdatePlayerBody PROC
     call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
     mov xCoord, eax
     mov yCoord, ebx
-    sub ebx, 2
     dec eax
     mov ecx, ' '
     call SetNewChar@0
@@ -309,6 +316,10 @@ UpdatePlayerBody PROC
     mov ecx, '\'
     call SetNewChar@0
     call ChangeCharAt@0
+
+    mov dl, isJumping
+    cmp dl, 1
+    jne skipReplace1_
      
     mov edx, direction
     cmp edx, 2 ; For jumping
@@ -316,11 +327,13 @@ UpdatePlayerBody PROC
     call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
     mov xCoord, eax
     mov yCoord, ebx
+   
     sub ebx, 3
     inc eax
     mov ecx, ' '
     call SetNewChar@0
     call ChangeCharAt@0
+    
     skipReplace1_:
 
 ; Update left leg
@@ -335,7 +348,9 @@ UpdatePlayerBody PROC
     mov ecx, '/'
     call SetNewChar@0
     call ChangeCharAt@0
-    
+    mov dl, isJumping
+    cmp dl, 1
+    jne skipReplace2_
     mov edx, direction
     cmp edx, 2 ; For jumping
     jne skipReplace2_
@@ -423,12 +438,32 @@ ret
 JumpProc ENDP
 
 GravityProc PROC
+; 1. Get player position
+    call GetPlayerXy@0
+    mov xCoord, eax
+    mov yCoord, ebx
 
+    ; 2. Clear old position
+   
+    mov ecx, ' '
+    call SetNewChar@0
+    call ChangeCharAt@0
+  
+    ; 3. Move down
+    dec yCoord
 
+    ; 4. Draw new position
+    mov ecx, 'O'
+    mov eax, xCoord
+    mov ebx, yCoord
+    call SetNewChar@0
+    call ChangeCharAt@0
 
-
-
-
+    ; 5. Save updated position
+    mov eax, xCoord
+    mov ebx, yCoord
+    call SetPlayerPos@0
+    call UpdatePlayerBody
 
 ret
 GravityProc ENDP
