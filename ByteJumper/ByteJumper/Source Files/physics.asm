@@ -47,7 +47,7 @@ StartPhysicsThread PROC
 
 
  Gravity PROC
-    mov eax, 1000
+    mov eax, 500
     call Delay
 groundCheckLoop_:
     mov eax, 1
