@@ -191,6 +191,227 @@ ShowHowToMenu PROC
 
 ShowHowToMenu ENDP
 
+DisplayPlatform PROC
+    call Clrscr
+
+    ; Ground
+    mov eax, 1                 ; this is the x value
+    mov ebx, 1                 ; this is the y value
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 2
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 3
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 4
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 5
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 6
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 7
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 8
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 9
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 10
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    
+    ; first platform
+    mov eax, 21                 ; this is the x value
+    mov ebx, 5                 ; this is the y value
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 22
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 23
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 24
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 25
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 26
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 27
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 28
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 29
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 30
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+
+    ; Second platform 
+
+    mov eax, 51                 ; this is the x value
+    mov ebx, 10                 ; this is the y value
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 52
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 53
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 54
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 55
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 56
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 57
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 58
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 59
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 60
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+
+    ; Third platform 
+    mov eax, 81                 ; this is the x value
+    mov ebx, 15                 ; this is the y value
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 82
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 83
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 84
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 85
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 86
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 87
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 88
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 89
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 90
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+
+    ; Fourth Platform
+    mov eax, 101                 ; this is the x value
+    mov ebx, 20                 ; this is the y value
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 102
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 103
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 104
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 105
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 106
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 107
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 108
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 109
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 110
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    call GetConsoleUi
+
+   
+
+ret
+
+DisplayPlatform ENDP
+
 GameOver PROC
     call Clrscr
     
