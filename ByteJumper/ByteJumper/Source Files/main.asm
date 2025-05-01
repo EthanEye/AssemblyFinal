@@ -63,6 +63,8 @@ main PROC
 
      ;call ShowHowToMenu@0
 
+     ; display random platforms
+     call Randomize
      call DisplayPlatform@0
 
     
@@ -70,7 +72,7 @@ main PROC
     ; call GameEngine@0
 
     ; Game over
-     call GameOver@0
+    ; call GameOver@0
     
      
     
