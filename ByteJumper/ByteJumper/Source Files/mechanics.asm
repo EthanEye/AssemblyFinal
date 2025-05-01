@@ -411,6 +411,28 @@ mov ebx, 1
 mov newChar, 2588h
 call ChangeCharAt
 
+mov eax, 80
+mov ebx, 5
+mov newChar, 2588h
+call ChangeCharAt
+mov eax, 81
+mov ebx, 5
+mov newChar, 2588h
+call ChangeCharAt
+mov eax, 82
+mov ebx, 5
+mov newChar, 2588h
+call ChangeCharAt
+mov eax, 83
+mov ebx, 5
+mov newChar, 2588h
+call ChangeCharAt
+mov eax, 84
+mov ebx, 5
+mov newChar, 2588h
+call ChangeCharAt
+
+
 ret
 StartPlatform ENDP
 END

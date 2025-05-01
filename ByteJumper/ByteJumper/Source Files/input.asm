@@ -25,7 +25,7 @@ threadHandle DWORD ?
 spaceStr BYTE "    SPACE    ", 0
 leftStr BYTE "  LEFT KEY    ", 0
 rightStr BYTE" RIGHT KEY    ", 0
-
+spaceWasDown BYTE 0
 prevTick   DWORD ?
 currTick   DWORD ?
 frameTime  DWORD ?
@@ -57,7 +57,7 @@ StartInputThread PROC
     mov eax, 500
     call Delay
     ; Thread loop is here
-      ThreadLoop_:
+      threadLoop_:
      
     call FrameCounter
     ; enter critical section
@@ -78,7 +78,7 @@ StartInputThread PROC
     mov eax, 1   ; time in milliseconds
     call Delay
     ; Main thread work
-   jmp ThreadLoop_
+   jmp threadLoop_
    ret
 PlayerInput ENDP
 

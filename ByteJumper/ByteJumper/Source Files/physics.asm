@@ -256,19 +256,14 @@ UpdatePlayerBody PROC
     call SetNewChar@0
     call ChangeCharAt@0
 
-    ; -------- Clear one below torso --------
-    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
-    mov xCoord, eax
-    mov yCoord, ebx
-    sub ebx,2                  
+    ; -------- Clear two below head --------
+    mov eax, xCoord
+    mov ebx, yCoord
+    sub ebx, 2                  
     mov ecx, ' '
     call SetNewChar@0
     call ChangeCharAt@0
     ; Update right arm
-    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
-    mov xCoord, eax
-    mov yCoord, ebx
-
     mov eax, xCoord
     mov ebx, yCoord
     dec ebx 
@@ -276,19 +271,13 @@ UpdatePlayerBody PROC
     mov ecx, '\'
     call SetNewChar@0
     call ChangeCharAt@0
-    
-    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
-    mov xCoord, eax
-    mov yCoord, ebx
+    mov eax, xCoord
+    mov ebx, yCoord
     inc eax
     mov ecx, ' '
     call SetNewChar@0
     call ChangeCharAt@0
     ; Update left arm
-    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
-    mov xCoord, eax
-    mov yCoord, ebx
-
     mov eax, xCoord
     mov ebx, yCoord
     dec ebx
@@ -296,19 +285,14 @@ UpdatePlayerBody PROC
     mov ecx, '/'
     call SetNewChar@0
     call ChangeCharAt@0
-
-    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
-    mov xCoord, eax
-    mov yCoord, ebx
+    
+    mov eax, xCoord
+    mov ebx, yCoord
     dec eax
     mov ecx, ' '
     call SetNewChar@0
     call ChangeCharAt@0
     ; Update right leg
-    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
-    mov xCoord, eax
-    mov yCoord, ebx
-
     mov eax, xCoord
     mov ebx, yCoord
     sub ebx, 2
@@ -320,13 +304,8 @@ UpdatePlayerBody PROC
     mov dl, isJumping
     cmp dl, 1
     jne skipReplace1_
-     
-    mov edx, direction
-    cmp edx, 2 ; For jumping
-    jne skipReplace1_
-    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
-    mov xCoord, eax
-    mov yCoord, ebx
+    mov eax, xCoord
+    mov ebx, yCoord
    
     sub ebx, 3
     inc eax
@@ -337,9 +316,7 @@ UpdatePlayerBody PROC
     skipReplace1_:
 
 ; Update left leg
-    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
-    mov xCoord, eax
-    mov yCoord, ebx
+  
 
     mov eax, xCoord
     mov ebx, yCoord
@@ -348,21 +325,19 @@ UpdatePlayerBody PROC
     mov ecx, '/'
     call SetNewChar@0
     call ChangeCharAt@0
+
     mov dl, isJumping
     cmp dl, 1
     jne skipReplace2_
-    mov edx, direction
-    cmp edx, 2 ; For jumping
-    jne skipReplace2_
-    call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
-    mov xCoord, eax
-    mov yCoord, ebx
+    mov eax, xCoord
+    mov ebx, yCoord
     sub ebx, 3
     dec eax
     mov ecx, ' '
     call SetNewChar@0
     call ChangeCharAt@0
     skipReplace2_:
+   
 
     ret
 UpdatePlayerBody ENDP
