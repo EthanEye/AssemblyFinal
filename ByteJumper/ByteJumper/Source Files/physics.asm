@@ -10,14 +10,13 @@ EXTERN SetPlayerPos@0 : PROC
 EXTERN CreateThread@24 : PROC
 EXTERN GroundCheckMsg@0 : PROC
 EXTERN JumpCheckingMsg@0 : PROC
-
-
+EXTERN main : PROC
 
 JUMP_DURATION = 2
 ; PHYSICS THREAD
 
 .data
-gravityDelay DWORD 80   ; initial delay time (ms)
+gravityDelay DWORD 80   ; Initial delay time (ms)
 isJumping BYTE 0
 isGrounded BYTE 1
 direction DWORD 4 dup(?)
@@ -25,6 +24,7 @@ xCoord DWORD ?
 yCoord DWORD ?
 newChar WORD ?
 textMsg BYTE "Test"
+collisionLock DWORD 0
 ; GAME PHYSICS
 
 threadID DWORD ?
@@ -41,7 +41,7 @@ StartPhysicsThread PROC
     push 0                  ; dwStackSize (default)
     push 0                  ; lpThreadAttributes (default)
     call CreateThread@24
-    mov threadHandle, eax   ; store handle if needed
+    mov threadHandle, eax   ; Store handle if needed
     ret
   StartPhysicsThread ENDP
 
@@ -93,18 +93,18 @@ applyGravity_:
     ; Check jumping status again before moving down
     mov dl, isJumping
     cmp dl, 1
-    je groundCheckLoop_   ; if still jumping, skip applying gravity
+    je groundCheckLoop_   ; If still jumping, skip applying gravity
 
     call GroundCheck
     mov dl, isGrounded
     cmp dl, 1
-    je groundCheckLoop_   ; if grounded, skip applying gravity
+    je groundCheckLoop_   ; If grounded, skip applying gravity
 
     mov eax, gravityDelay
     call Delay
 
     ;  Check again before moving
-    call GravityProc      ; only now move down
+    call GravityProc      ; Only now move down
 
     ; Decrease delay (faster fall)
     mov eax, gravityDelay
@@ -238,6 +238,7 @@ Movement PROC
 
     endMovementProc_:
     mov edx, 0
+    call CheckCollisions
     ret
     Movement ENDP
 
@@ -379,7 +380,27 @@ notGrounded_:
 
 endGroundCheck_:
     call GroundCheckMsg@0
-    ret
+; Check game over
+call GetPlayerXy@0         ; EAX = x, EBX = y
+; If y is less than 2 end the game
+cmp ebx, 1
+je gameOver_
+jmp endBoundCheck_
+gameOver_:
+mov eax, 20
+mov ebx, 10
+mov ecx, 'L'
+call SetNewChar@0
+call ChangeCharAt@0
+; End game message here
+
+
+
+exit
+
+endBoundCheck_:
+
+ret
 GroundCheck ENDP
 
 JumpProc PROC
@@ -406,6 +427,7 @@ JumpProc PROC
     ; 5. Save updated position
     mov eax, xCoord
     mov ebx, yCoord
+
     call SetPlayerPos@0
     call UpdatePlayerBody
 
@@ -443,7 +465,21 @@ GravityProc PROC
 ret
 GravityProc ENDP
 
+CheckCollisions PROC
+    ; ===== Acquire lock =====
+acquire_lock:
+    mov eax, 1
+    lock xchg eax, collisionLock
+    cmp eax, 0
+    jne acquire_lock
 
+    ; ===== Critical section =====
+   
+    ; ===== Release lock =====
+    mov collisionLock, 0
+
+    ret
+CheckCollisions ENDP
 
 
 

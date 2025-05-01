@@ -38,8 +38,6 @@ bytesWritten DWORD ?
 xCoord DWORD ?
 yCoord DWORD ?
 index BYTE ? 
-row WORD 0
-col WORD 0
 newChar WORD 2584h
 ; STRINGS AND CHARACTERS
 commaStr DWORD ",", 0
@@ -48,7 +46,6 @@ rightPrt DWORD " =Y ", 0
 temp DWORD ? ; Previous Location
 ; DISPLAY ARRAY
 gameBoard WORD ROWS * COLS DUP(' ') ; 
-msg BYTE "Loading Game...", 0   ; Null-terminated string
 groundedMsg BYTE " Grounded: ", 0
 jumpingMsg BYTE " Jumping: " , 0
 inputStr BYTE 32 DUP(0)         ; reserve 32 bytes for output message ; Updated based on current input for debugging
@@ -95,13 +92,13 @@ call SpawnPlayer
 
 ; This is where the main game functions are called
 mainLoop_:
-mov eax, 1   ; time in milliseconds
-call Delay       
-mov edx, 0   ; column
-mov ecx, 0     ; row
-call Gotoxy    ;  move the cursor
-call GetCurrentFrame
-call PrintPlayerPos
+mov eax, 1              
+call Delay              ; Time in milliseconds
+mov edx, 0              ; Column
+mov ecx, 0              ; Row
+call Gotoxy             ; Move the cursor
+call GetCurrentFrame    ; Print Current Array
+call PrintPlayerPos     ; Current player pos
 jmp mainLoop_
 exitTestLoop:
 ret
@@ -363,74 +360,21 @@ mov eax, 55
 mov ebx, 3
 mov newChar, '/'
 call ChangeCharAt
-
-
 ret
 SpawnPlayer ENDP
 
 StartPlatform PROC
+mov ebx, 1              ; Y position at bottom of screen (adjust if needed)
+mov ecx, 0              ; ECX = loop counter (X position)
+platform_loop:
+mov eax, ecx             ; EAX = X position
+mov newChar, 2588h       ; solid block 
+call ChangeCharAt
+inc ecx
+cmp ecx, 100             ; screen width
+jl platform_loop         ; loop until x = 119
 
-mov eax, 54
-mov ebx, 2
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 55
-mov ebx, 2
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 56
-mov ebx, 2
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 57
-mov ebx, 2
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 58
-mov ebx, 2
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 54
-mov ebx, 1
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 55
-mov ebx, 1
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 56
-mov ebx, 1
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 57
-mov ebx, 1
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 58
-mov ebx, 1
-mov newChar, 2588h
-call ChangeCharAt
 
-mov eax, 80
-mov ebx, 5
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 81
-mov ebx, 5
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 82
-mov ebx, 5
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 83
-mov ebx, 5
-mov newChar, 2588h
-call ChangeCharAt
-mov eax, 84
-mov ebx, 5
-mov newChar, 2588h
-call ChangeCharAt
 
 
 ret

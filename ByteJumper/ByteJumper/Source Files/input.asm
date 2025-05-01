@@ -21,7 +21,7 @@ EXTERN InitializeCriticalSection@4 : PROC
 .data
 critSec DWORD 6 DUP(?)
 threadID DWORD ?
-threadHandle DWORD ?
+inputThreadHandle DWORD ?
 spaceStr BYTE "    SPACE    ", 0
 leftStr BYTE "  LEFT KEY    ", 0
 rightStr BYTE" RIGHT KEY    ", 0
@@ -46,7 +46,7 @@ StartInputThread PROC
     push OFFSET critSec
     call InitializeCriticalSection@4 ; Used for locking threads so only one can run at a time
 
-    mov threadHandle, eax   ; store handle if needed
+    mov inputThreadHandle, eax   ; Store handle if needed
     ret
   StartInputThread ENDP
 
@@ -75,7 +75,7 @@ StartInputThread PROC
     call LeaveCriticalSection@4
    
      
-    mov eax, 1   ; time in milliseconds
+    mov eax, 1   ; Time in milliseconds
     call Delay
     ; Main thread work
    jmp threadLoop_
