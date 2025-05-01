@@ -16,7 +16,7 @@ EXTERN Movement@0 : PROC
 EXTERN EnterCriticalSection@4 : PROC
 EXTERN LeaveCriticalSection@4 : PROC
 EXTERN InitializeCriticalSection@4 : PROC
-
+EXTERN ExitThread@4 : PROC
 
 .data
 critSec DWORD 6 DUP(?)
@@ -163,5 +163,11 @@ FrameCounter PROC
 skipPrint:
     ret
 FrameCounter ENDP
+
+EndInputThread PROC
+push 0              ; Exit code (0 = success)
+call ExitThread@4     ; Gracefully end this thread
+ret
+EndInputThread ENDP
 
 END 

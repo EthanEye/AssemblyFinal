@@ -2,8 +2,8 @@ INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
 INCLUDELIB kernel32.lib 
 
-EXTERN WriteConsoleW@20 : PROC  ;  declare external WinAPI
-EXTERN GetStdHandle@4 : PROC
+extern WriteConsoleW@20 : PROC  ;  declare external WinAPI
+extern GetStdHandle@4 : PROC
 
 
 ; SCREEN HEIGHT AND WIDTH
@@ -18,12 +18,46 @@ outputHandle DWORD ?
 tempChar WORD ?
 bytesWritten DWORD ?
 newChar WORD 2584h
-gameBoard WORD ROWS * COLS DUP('X') ;
-bigText1 BYTE "        ______     __  __     ______   ______          __     __  __     __    __     ______   ______     ______    ", 10,0  
-bigText2 BYTE "       /\  == \   /\ \_\ \   /\__  _\ /\  ___\        /\ \   /\ \/\ \   /\ -./ \ \   /\  == \ /\  ___\   /\  == \  ", 10,0 
-bigText3 BYTE "       \ \  __<   \ \____ \  \/_/\ \/ \ \  __\       _\_\ \  \ \ \_\ \  \ \ \-./\ \  \ \  _-/ \ \  __\   \ \  __< " , 10,0 
-bigText4 BYTE "        \ \_____\  \/\_____\    \ \_\  \ \_____\    /\_____\  \ \_____\  \ \_\ \ \_\  \ \_\    \ \_____\  \ \_\ \_\", 10, 0
-bigText5 BYTE "         \/_____/   \/_____/     \/_/   \/_____/    \/_____/   \/_____/   \/_/  \/_/   \/_/     \/_____/   \/_/ /_/ ", 10,0                                                                                                            
+; UNICODE FOR BOX FRAME
+topLeftChar WORD 9556h
+topRightChar WORD 9559h
+bottomLeftChar WORD 9562h
+bottomRightChar WORD 9565h
+vLineChar WORD 9553h
+hLineChar WORD 9555h
+
+gameBoard WORD ROWS * COLS DUP(' ') ;
+bigText1 BYTE "       ______     __  __     ______   ______          __     __  __     __    __     ______   ______     ______    ", 10,0  
+bigText2 BYTE "      /\  == \   /\ \_\ \   /\__  _\ /\  ___\        /\ \   /\ \/\ \   /\ -./ \ \   /\  == \ /\  ___\   /\  == \  ", 10,0 
+bigText3 BYTE "      \ \  __<   \ \____ \  \/_/\ \/ \ \  __\       _\_\ \  \ \ \_\ \  \ \ \-./\ \  \ \  __/ \ \  __\   \ \  __< " , 10,0 
+bigText4 BYTE "       \ \_____\  \/\_____\    \ \_\  \ \_____\    /\_____\  \ \_____\  \ \_\ \ \_\  \ \_\    \ \_____\  \ \_\ \_\", 10, 0
+bigText5 BYTE "        \/_____/   \/_____/     \/_/   \/_____/    \/_____/   \/_____/   \/_/  \/_/   \/_/     \/_____/   \/_/ /_/ ", 10,0                                                                                                            
+
+
+start BYTE "            How To Play: '?' ||| Start: 'Enter' ||| Quit: 'Esc'",10,0 
+
+howToPlay0 BYTE "+----------------------------------------------+",10,0
+howToPlay1 BYTE "|                  HOW TO PLAY                 |",10,0
+howToPlay2 BYTE "|           MOVE: A(LEFT), D(RIGHT)            |",10,0
+howToPlay3 BYTE "|           JUMP: SPACE BAR                    |",10,0
+howToPlay4 BYTE "|           LAND ON PLATFORMS TO SURVIVE       |",10,0
+howToPlay5 BYTE "|           MISS A PLATFORM === GAME OVER      |",10,0
+howToPlay6 BYTE "+----------------------------------------------+",10,0
+
+gameOverText1 BYTE "               ______    ______   __       __  ________         ______   __     __  ________  _______",10,0
+gameOverText2 BYTE "              /      \  /      \ |  \     /  \|        \       /      \ |  \   |  \|        \|       \",10,0
+gameOverText3 BYTE "             |  $$$$$$\|  $$$$$$\| $$\   /  $$| $$$$$$$$      |  $$$$$$\| $$   | $$| $$$$$$$$| $$$$$$$\",10,0
+gameOverText4 BYTE "             | $$ __\$$| $$__| $$| $$$\ /  $$$| $$__          | $$  | $$| $$   | $$| $$__    | $$__| $$",10,0
+gameOverText5 BYTE "             | $$|    \| $$    $$| $$$$\  $$$$| $$  \         | $$  | $$ \$$\ /  $$| $$  \   | $$    $$",10,0
+gameOverText6 BYTE "             | $$ \$$$$| $$$$$$$$| $$\$$ $$ $$| $$$$$         | $$  | $$  \$$\  $$ | $$$$$   | $$$$$$$\",10,0
+gameOverText7 BYTE "             | $$__| $$| $$  | $$| $$ \$$$| $$| $$_____       | $$__/ $$   \$$ $$  | $$_____ | $$  | $$",10,0
+gameOverText8 BYTE "              \$$    $$| $$  | $$| $$  \$ | $$| $$     \       \$$    $$    \$$$   | $$     \| $$  | $$",10,0
+gameOverText9 BYTE "               \$$$$$$  \$$   \$$ \$$      \$$ \$$$$$$$$        \$$$$$$      \$     \$$$$$$$$ \$$   \$$",10,0
+                                                                                          
+                                                                                       
+                                                                                          
+
+
 
 .code
 
@@ -131,4 +165,302 @@ ChangeChar PROC
 
     ret
 ChangeChar ENDP
+
+ShowHowToMenu PROC
+    call Clrscr
+    mov edx, OFFSET howToPlay0
+    call WriteString
+    mov edx, OFFSET howToPlay1
+    call WriteString
+    mov edx, OFFSET howToPlay2
+    call WriteString
+    mov edx, OFFSET howToPlay3
+    call WriteString
+    mov edx, OFFSET howToPlay4
+    call WriteString
+    mov edx, OFFSET howToPlay5
+    call WriteString
+    mov edx, OFFSET howToPlay6
+    call WriteString
+
+    ; Top Border
+  
+
+
+    ;mov  eax, 10                 ; this is the x value
+    ;mov  ebx, 10                 ; this is the y value
+    ;mov  topLeftChar, 9556h
+    ;call ChangeChar
+    ;call GetConsoleUi
+    
+    
+    ret
+
+
+ShowHowToMenu ENDP
+
+DisplayPlatform PROC
+    call Clrscr
+
+    ; Ground
+    mov eax, 1                 ; this is the x value
+    mov ebx, 1                 ; this is the y value
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 2
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 3
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 4
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 5
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 6
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 7
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 8
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 9
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 10
+    mov ebx, 1
+    mov newChar, 2588h
+    call ChangeChar
+    
+    ; first platform
+    mov eax, 21                 ; this is the x value
+    mov ebx, 5                 ; this is the y value
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 22
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 23
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 24
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 25
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 26
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 27
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 28
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 29
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 30
+    mov ebx, 5
+    mov newChar, 2588h
+    call ChangeChar
+
+    ; Second platform 
+
+    mov eax, 51                 ; this is the x value
+    mov ebx, 10                 ; this is the y value
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 52
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 53
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 54
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 55
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 56
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 57
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 58
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 59
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 60
+    mov ebx, 10
+    mov newChar, 2588h
+    call ChangeChar
+
+    ; Third platform 
+    mov eax, 81                 ; this is the x value
+    mov ebx, 15                 ; this is the y value
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 82
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 83
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 84
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 85
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 86
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 87
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 88
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 89
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 90
+    mov ebx, 15
+    mov newChar, 2588h
+    call ChangeChar
+
+    ; Fourth Platform
+    mov eax, 101                 ; this is the x value
+    mov ebx, 20                 ; this is the y value
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 102
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 103
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 104
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 105
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 106
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 107
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 108
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 109
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    mov eax, 110
+    mov ebx, 20
+    mov newChar, 2588h
+    call ChangeChar
+    call GetConsoleUi
+
+   
+
+ret
+
+DisplayPlatform ENDP
+
+GameOver PROC
+    call ClrScr
+    mov ecx, 0
+    centerScreen:
+    cmp ecx, 10
+    je endCenter_
+    call Crlf
+    inc ecx
+    jmp centerScreen
+    endCenter_:
+   
+    mov edx, OFFSET gameOverText1
+    call WriteString
+    mov edx, OFFSET gameOverText2
+    call WriteString
+    mov edx, OFFSET gameOverText3
+    call WriteString
+    mov edx, OFFSET gameOverText4
+    call WriteString
+    mov edx, OFFSET gameOverText5
+    call WriteString
+    mov edx, OFFSET gameOverText6
+    call WriteString
+    mov edx, OFFSET gameOverText7
+    call WriteString
+    mov edx, OFFSET gameOverText8
+    call WriteString
+    mov edx, OFFSET gameOverText9
+    call WriteString
+
+    call WaitMsg
+   
+    ;mov eax, 10                 ; this is the x value
+   ; mov ebx, 10                 ; this is the y value
+   ; mov newChar, 'X'
+   ; call ChangeChar
+   ; call GetConsoleUi
+    
+    ret
+
+GameOver ENDP
+
+
 END 

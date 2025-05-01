@@ -11,7 +11,9 @@ EXTERN GetStdHandle@4 : PROC
 EXTERN SetConsoleCursorInfo@8 : PROC
 EXTERN StartInputThread@0 : PROC
 EXTERN StartPhysicsThread@0 : PROC
-
+EXTERN EndInputThread@0 : PROC
+EXTERN EndPhysicsThread@0 : PROC
+EXTERN GameOver@0 : PROC
 ; SCREEN HEIGHT AND WIDTH
 ROWS = 25 ; Y
 COLS = 120 ; X  
@@ -55,6 +57,7 @@ frameCount DWORD 0
                                 ; Index = row * COLS + col This gives you the correct index into the flat array as if it were 2D
 checkGrounded BYTE 1            ; Updated from physics.asm make sure its set to 1
 checkJumping BYTE 0             ;Updated from physics.asm
+gameRunning BYTE 1
 .code
 
 GameEngine PROC 
@@ -96,11 +99,14 @@ mov eax, 1
 call Delay              ; Time in milliseconds
 mov edx, 0              ; Column
 mov ecx, 0              ; Row
+mov dl, gameRunning 
+cmp dl , 0
+je mainLoop_
 call Gotoxy             ; Move the cursor
 call GetCurrentFrame    ; Print Current Array
 call PrintPlayerPos     ; Current player pos
 jmp mainLoop_
-exitTestLoop:
+
 ret
 GameEngine ENDP
 
@@ -373,10 +379,32 @@ call ChangeCharAt
 inc ecx
 cmp ecx, 100             ; screen width
 jl platform_loop         ; loop until x = 119
-
-
+mov eax, 20
+mov ebx, 10
+mov newChar, 2588h       ; solid block 
+call ChangeCharAt
 
 
 ret
 StartPlatform ENDP
+
+EndGame PROC
+ mov gameRunning, 0
+ mov esi, OFFSET gameBoard        ; point to start of board
+ mov ecx, ROWS * COLS             ; total number of characters
+
+fillLoop:
+    mov WORD PTR [esi], ' '          ; store space character
+    add esi, 2                       ; move to next WORD
+    loop fillLoop
+mov edx, 0              ; Column
+mov ecx, 0              ; Row
+call Gotoxy             ; Move the cursor
+call ClrScr
+call GameOver@0
+call EndInputThread@0
+call EndPhysicsThread@0
+
+ret
+EndGame ENDP
 END
