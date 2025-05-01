@@ -111,7 +111,10 @@ ret
 GameEngine ENDP
 
 GetCurrentFrame PROC
-    mov ecx, 0
+
+mov eax, cyan
+call SetTextColor
+mov ecx, 0
 
 fillCharacters:
     cmp ecx, SCREENSIZE
@@ -172,7 +175,7 @@ GetCurrentFrame ENDP
 
 ; Print coordinate given (EAX = x EBX = y)
 PrintPlayerPos PROC
-mov eax, green       ; Set EAX to green color
+mov eax, white       ; Set EAX to green color
 call SetTextColor
 ; Start location
 mov dh, 0
@@ -212,8 +215,7 @@ jne skipTimerUpdate
 call Timer@0
 mov frameCount, 0
 skipTimerUpdate:
-mov eax, white
-call SetTextColor
+
 ret
 
 PrintPlayerPos ENDP
@@ -340,6 +342,9 @@ JumpCheckingMsg ENDP
 
 
 SpawnPlayer PROC 
+mov eax, magenta       ; Set EAX to green color
+call SetTextColor
+
 mov eax, STARTX
 mov ebx, STARTY
 mov xCoord, 56 ; Set player position from head Pos
@@ -370,6 +375,9 @@ ret
 SpawnPlayer ENDP
 
 StartPlatform PROC
+mov eax, cyan
+call SetTextColor
+ call WriteString
 mov ebx, 1              ; Y position at bottom of screen (adjust if needed)
 mov ecx, 0              ; ECX = loop counter (X position)
 platform_loop:
@@ -383,7 +391,7 @@ mov eax, 20
 mov ebx, 10
 mov newChar, 2588h       ; solid block 
 call ChangeCharAt
-
+call DisplayPlatform
 
 ret
 StartPlatform ENDP
@@ -407,4 +415,44 @@ call EndPhysicsThread@0
 
 ret
 EndGame ENDP
+
+
+DisplayPlatform PROC
+    
+
+    mov ecx, 4              ; Number of platforms
+    mov ebx, 5              ; Starting Y position (low on screen)
+    
+platform_loop:
+    push ecx                ; Save loop counter
+    push ebx                ; Save current Y
+
+    ; Generate random X position (safe range: 0 to COLS - platformWidth)
+    mov eax, COLS - 10
+    call RandomRange        ; EAX = random X between 0 and (COLS - 10)
+
+    ; Draw 10-character platform at random X (EAX), fixed Y (EBX)
+    mov edi, 0              ; Counter for platform width
+draw_loop:
+    
+    push eax                ; Save X
+    push ebx                ; Save Y
+    add eax, edi            ; X + offset
+    mov newChar, 2588h
+    call ChangeCharAt
+
+    pop ebx
+    pop eax
+    inc edi
+    cmp edi, 10
+    jl draw_loop
+
+    pop ebx                 ; Restore Y
+    pop ecx                 ; Restore loop counter
+    add ebx, 5              ; Move next platform higher (Y + 5)
+    loop platform_loop
+
+ 
+    ret
+DisplayPlatform ENDP
 END

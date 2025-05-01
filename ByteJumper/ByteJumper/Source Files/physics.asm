@@ -253,6 +253,7 @@ Movement PROC
 
 UpdatePlayerBody PROC
 
+
  ; 1. Get head position
     call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
     mov xCoord, eax
