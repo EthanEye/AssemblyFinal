@@ -73,12 +73,13 @@ GameStart PROC
     call WriteString
     mov edx, OFFSET bigText5
     call WriteString
-    call WaitMsg
-   
-    ;mov eax, 10                 ; this is the x value
-    ;mov ebx, 10                 ; this is the y value
-    ;mov newChar, 9556h
-    ;call ChangeChar
+    mov eax, 3000   ; time in milliseconds
+    call Delay 
+    mov dh, 0
+    mov dl, 0
+    call Gotoxy      ; Clears the screen
+ 
+    ;call GetConsoleUi
     ;call GetConsoleUi
     
     ret
