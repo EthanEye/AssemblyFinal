@@ -11,15 +11,17 @@ INCLUDELIB Irvine32.lib
 INCLUDELIB kernel32.lib
 INCLUDELIB user32.lib
 
-EXTERN GameStart@0 : near
-EXTERN GameEngine@0 : near
-EXTERN GetStdHandle@4 : PROC
-EXTERN GetConsoleMode@8 : PROC
-EXTERN SetConsoleMode@8 : PROC
-EXTERN SetConsoleTitleA@4: PROC
-EXTERN GetConsoleUi@0 : PROC
-
-
+extern GameStart@0 : near
+extern GameEngine@0 : near
+extern GetStdHandle@4 : PROC
+extern GetConsoleMode@8 : PROC
+extern SetConsoleMode@8 : PROC
+extern SetConsoleTitleA@4: PROC
+extern GetConsoleUi@0 : PROC
+extern GameOver@0 : near
+extern ShowHowToMenu@0 : near
+extern DisplayPlatform@0 : near
+extern GameOver@0 : near
 
 
 .data
@@ -62,11 +64,21 @@ main PROC
     ENABLE_EXTENDED_FLAGS  EQU 0x0080
    
     ; Game start 
-    call GameStart@0
-    call GameEngine@0
+     call GameStart@0
+
+     ;call ShowHowToMenu@0
+
+     ; display random platforms
+     call Randomize
+     call DisplayPlatform@0
+
     
   
-  
+    ; call GameEngine@0
+
+    ; Game over
+    ; call GameOver@0
+    
      
     
     exit
