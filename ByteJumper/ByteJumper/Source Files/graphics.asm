@@ -63,6 +63,14 @@ gameOverText9 BYTE "  \$$$$$$  \$$   \$$ \$$      \$$ \$$$$$$$$        \$$$$$$  
 
 ; Welcome Screen Message, "Play Button", Title Screen, Rules etc...
 GameStart PROC
+    mov ecx, 0
+    centerScreen:
+    cmp ecx, 10
+    je endCenter_
+    call Crlf
+    inc ecx
+    jmp centerScreen
+    endCenter_:
     mov edx, OFFSET bigText1
     call WriteString
     mov edx, OFFSET bigText2
