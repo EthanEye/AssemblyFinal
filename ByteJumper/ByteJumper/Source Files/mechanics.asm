@@ -418,8 +418,6 @@ EndGame ENDP
 
 
 DisplayPlatform PROC
-    
-
     mov ecx, 4              ; Number of platforms
     mov ebx, 5              ; Starting Y position (low on screen)
     
@@ -451,8 +449,6 @@ draw_loop:
     pop ecx                 ; Restore loop counter
     add ebx, 5              ; Move next platform higher (Y + 5)
     loop platform_loop
-
- 
     ret
 DisplayPlatform ENDP
 END

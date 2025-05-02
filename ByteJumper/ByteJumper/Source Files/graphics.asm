@@ -21,14 +21,19 @@ newChar WORD 2584h
 
 
 gameBoard WORD ROWS * COLS DUP(' ') ;
-bigText1 BYTE "        ______     __  __     ______   ______          __     __  __     __    __     ______   ______     ______    ", 10,0  
-bigText2 BYTE "       /\  == \   /\ \_\ \   /\__  _\ /\  ___\        /\ \   /\ \/\ \   /\ -./  \    /\  == \ /\  ___\   /\  == \  ", 10,0 
-bigText3 BYTE "       \ \  __<   \ \____ \  \/_/\ \/ \ \  __\       _\_\ \  \ \ \_\ \  \ \ \-./\ \  \ \  _-/ \ \  __\   \ \  __< " , 10,0 
-bigText4 BYTE "        \ \_____\  \/\_____\    \ \_\  \ \_____\    /\_____\  \ \_____\  \ \_\ \ \_\  \ \_\    \ \_____\  \ \_\ \_\", 10, 0
-bigText5 BYTE "         \/_____/   \/_____/     \/_/   \/_____/    \/_____/   \/_____/   \/_/  \/_/   \/_/     \/_____/   \/_/ /_/ ", 10,0                                                                                                            
 
 
-
+bigText0 BYTE "      /$$$$$$$              /$$                        /$$$$$ ", 10,0                                                     
+bigText1 BYTE "     | $$__  $$            | $$                       |__  $$ ", 10,0                                                     
+bigText2 BYTE "     | $$  \ $$ /$$   /$$ /$$$$$$    /$$$$$$             | $$ /$$   /$$ /$$$$$$/$$$$   /$$$$$$   /$$$$$$   /$$$$$$ ", 10,0
+bigText3 BYTE "     | $$$$$$$ | $$  | $$|_  $$_/   /$$__  $$            | $$| $$  | $$| $$_  $$_  $$ /$$__  $$ /$$__  $$ /$$__  $$ ", 10,0
+bigText4 BYTE "     | $$__  $$| $$  | $$  | $$    | $$$$$$$$       /$$  | $$| $$  | $$| $$ \ $$ \ $$| $$  \ $$| $$$$$$$$| $$  \__/ ", 10,0
+bigText5 BYTE "     | $$  \ $$| $$  | $$  | $$ /$$| $$_____/      | $$  | $$| $$  | $$| $$ | $$ | $$| $$  | $$| $$_____/| $$  ", 10,0     
+bigText6 BYTE "     | $$$$$$$/|  $$$$$$$  |  $$$$/|  $$$$$$$      |  $$$$$$/|  $$$$$$/| $$ | $$ | $$| $$$$$$$/|  $$$$$$$| $$ ", 10,0     
+bigText7 BYTE "     |_______/  \____  $$   \___/   \_______/       \______/  \______/ |__/ |__/ |__/| $$____/  \_______/|__/ ", 10,0      
+bigText8 BYTE "                /$$  | $$                                                            | $$", 10,0                      
+bigText9 BYTE "               |  $$$$$$/                                                            | $$", 10,0                    
+bigText10 BYTE "                \______/                                                             |__/", 10,0 
 
 howToPlay0 BYTE "+----------------------------------------------+",10,0
 howToPlay1 BYTE "|                  HOW TO PLAY                 |",10,0
@@ -67,32 +72,35 @@ GameStart PROC
     endCenter_:
     mov eax, cyan
     call SetTextColor
+    mov edx, OFFSET bigText0
+    call WriteString
     mov edx, OFFSET bigText1
     call WriteString
-    mov eax, cyan
-    call SetTextColor
     mov edx, OFFSET bigText2
-    mov eax, cyan
-    call SetTextColor
     call WriteString
     mov edx, OFFSET bigText3
-    mov eax, cyan
-    call SetTextColor
     call WriteString
     mov edx, OFFSET bigText4
-    mov eax, cyan
-    call SetTextColor
     call WriteString
     mov edx, OFFSET bigText5
-    mov eax, cyan
-    call SetTextColor
+    call WriteString
+    mov edx, OFFSET bigText6
+    call WriteString
+    mov edx, OFFSET bigText7
+    call WriteString
+    mov edx, OFFSET bigText8
+    call WriteString
+    mov edx, OFFSET bigText9
+    call WriteString
+    mov edx, OFFSET bigText10
     call WriteString
     mov eax, 3000   ; time in milliseconds
     call Delay 
+    call waitMsg
     mov dh, 0
     mov dl, 0
     call Gotoxy      ; Clears the screen
- 
+    
 
     
     ret
