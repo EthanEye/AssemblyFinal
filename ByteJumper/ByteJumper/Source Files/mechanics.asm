@@ -14,6 +14,7 @@ EXTERN StartPhysicsThread@0 : PROC
 EXTERN EndInputThread@0 : PROC
 EXTERN EndPhysicsThread@0 : PROC
 EXTERN GameOver@0 : PROC
+
 ; SCREEN HEIGHT AND WIDTH
 ROWS = 25 ; Y
 COLS = 120 ; X  
@@ -401,10 +402,7 @@ call ChangeCharAt
 inc ecx
 cmp ecx, 100             ; screen width
 jl platform_loop         ; loop until x = 119
-mov eax, 20
-mov ebx, 10
-mov newChar, 2588h       ; solid block 
-call ChangeCharAt
+
 call DisplayPlatform
 
 ret
@@ -486,7 +484,17 @@ sub ebx, 2
 call GetCharAt          
 cmp ax, 2588h 
 je collisionFound_
-
+; This one is only for if player is not grounded
+mov dl, checkGrounded
+cmp dl, 1
+je skipRightCollision_
+mov eax, xCoord
+mov ebx, yCoord
+add eax, 3
+sub ebx, 3
+call GetCharAt          
+cmp ax, 2588h 
+je collisionFound_
 jmp collisionNotFound_ 
 skipRightCollision_:
 cmp edx, 3
@@ -509,6 +517,17 @@ mov eax, xCoord
 mov ebx, yCoord
 sub eax, 3
 sub ebx, 2
+call GetCharAt          
+cmp ax, 2588h 
+je collisionFound_
+; This one is only for if player is not grounded
+mov dl, checkGrounded
+cmp dl, 1
+je skipRightCollision_
+mov eax, xCoord
+mov ebx, yCoord
+sub eax, 3
+sub ebx, 3
 call GetCharAt          
 cmp ax, 2588h 
 je collisionFound_

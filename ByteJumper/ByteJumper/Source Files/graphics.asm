@@ -70,7 +70,7 @@ GameStart PROC
     inc ecx
     jmp centerScreen
     endCenter_:
-    mov eax, cyan
+    mov eax, magenta
     call SetTextColor
     mov edx, OFFSET bigText0
     call WriteString

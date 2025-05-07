@@ -90,7 +90,11 @@ noGravity_:
     call Delay
 
     mov edx, 2             ; 2 = direction UP
+    call CheckForCollisions@0
+    cmp al, 1
+    je endJump_
     call JumpProc
+    
    
     pop ecx
     inc ecx
@@ -112,7 +116,7 @@ applyGravity_:
     call Delay
 
     ;  Check again before moving
-    call GravityProc      ; Only now move down
+    call GravityProc      ; Only now move downgravityCheck
 
     ; Decrease delay (faster fall)
     mov eax, gravityDelay
@@ -257,7 +261,6 @@ Movement PROC
 
     endMovementProc_:
     mov edx, 0
-    call CheckCollisions
     ret
     Movement ENDP
 
@@ -386,6 +389,7 @@ GroundCheck PROC
     call GetCharAt@0
     cmp ax, 2588h 
     je isGrounded_
+   
 
     ; If no ground detected
     jmp notGrounded_
@@ -483,21 +487,7 @@ GravityProc PROC
 ret
 GravityProc ENDP
 
-CheckCollisions PROC
-    ; ===== Acquire lock =====
-acquire_lock:
-    mov eax, 1
-    lock xchg eax, collisionLock
-    cmp eax, 0
-    jne acquire_lock
 
-    ; ===== Critical section =====
-   
-    ; ===== Release lock =====
-    mov collisionLock, 0
-
-    ret
-CheckCollisions ENDP
 
 EndPhysicsThread PROC
 push 0              ; Exit code (0 = success)
