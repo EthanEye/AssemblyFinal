@@ -14,6 +14,7 @@ EXTERN StartPhysicsThread@0 : PROC
 EXTERN EndInputThread@0 : PROC
 EXTERN EndPhysicsThread@0 : PROC
 EXTERN GameOver@0 : PROC
+EXTERN ShowHowToMenu@0 : PROC
 
 ; SCREEN HEIGHT AND WIDTH
 ROWS = 25 ; Y
@@ -544,9 +545,9 @@ endCollisionCheck_:
 ret
 CheckForCollisions ENDP
 
-
+;; display platform procedure uses a loop to generate random platfors as well as displays them everytime game is run 5.1.2025
 DisplayPlatform PROC
-    mov ecx, 4              ; Number of platforms
+    mov ecx, 6              ; Number of platforms
     mov ebx, 5              ; Starting Y position (low on screen)
     
 platform_loop:

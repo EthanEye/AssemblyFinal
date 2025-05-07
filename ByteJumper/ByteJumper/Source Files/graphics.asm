@@ -1,3 +1,9 @@
+; AARON VILLALOBOS
+;GRAPHICS FILE FOR BYTE JUMPER
+;Purpose Display front end graphics of game including text and textcolor
+;Title page, how to play page, game over display
+
+
 INCLUDE Irvine32.inc
 INCLUDELIB Irvine32.lib
 INCLUDELIB kernel32.lib 
@@ -35,13 +41,58 @@ bigText8 BYTE "                /$$  | $$                                        
 bigText9 BYTE "               |  $$$$$$/                                                            | $$", 10,0                    
 bigText10 BYTE "                \______/                                                             |__/", 10,0 
 
-howToPlay0 BYTE "+----------------------------------------------+",10,0
-howToPlay1 BYTE "|                  HOW TO PLAY                 |",10,0
-howToPlay2 BYTE "|           MOVE: A(LEFT), D(RIGHT)            |",10,0
-howToPlay3 BYTE "|           JUMP: SPACE BAR                    |",10,0
-howToPlay4 BYTE "|           LAND ON PLATFORMS TO SURVIVE       |",10,0
-howToPlay5 BYTE "|           MISS A PLATFORM === GAME OVER      |",10,0
-howToPlay6 BYTE "+----------------------------------------------+",10,0
+howToPlayDisplay1 BYTE "        .--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--. ", 10,0
+howToPlayDisplay2 BYTE "       / .. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \", 10,0
+howToPlayDisplay3 BYTE "       \ \/\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ \/ /",10,0
+howToPlayDisplay4 BYTE "        \/ /`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'\/ / ",10,0
+howToPlayDisplay5 BYTE "        / /\                                                                                / /\ ",10,0
+howToPlayDisplay6 BYTE "       / /\ \   _    _  ______          __  _______ ____    _____  _           __     __   / /\ \",10,0
+howToPlayDisplay7 BYTE "       \ \/ /  | |  | |/ __ \ \        / / |__   __/ __ \  |  __ \| |        /\\ \   / /   \ \/ /",10,0
+howToPlayDisplay8 BYTE "        \/ /   | |__| | |  | \ \  /\  / /     | | | |  | | | |__) | |       /  \\ \_/ /     \/ / ",10,0
+howToPlayDisplay9 BYTE "        / /\   |  __  | |  | |\ \/  \/ /      | | | |  | | |  ___/| |      / /\ \\   /      / /\ ",10,0
+howToPlayDisplay10 BYTE "       / /\ \  | |  | | |__| | \  /\  /       | | | |__| | | |    | |____ / ____ \| |      / /\ \",10,0
+howToPlayDisplay11 BYTE "       \ \/ /  |_|  |_|\____/   \/  \/        |_|  \____/  |_|    |______/_/    \_\_|      \ \/ /",10,0
+howToPlayDisplay12 BYTE "        \/ /                                                                                \/ / ",10,0
+howToPlayDisplay13 BYTE "        / /\.--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--./ /\ ",10,0
+howToPlayDisplay14 BYTE "       / /\ \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \/\ \",10,0
+howToPlayDisplay15 BYTE "       \ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `' /",10,0
+howToPlayDisplay16 BYTE "        `--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--' ",10,0
+
+playInstruction1 BYTE "                         __| |____________________________________________| |__",10,0
+playInstruction2 BYTE "                        (__   ____________________________________________   __)",10,0
+playInstruction3a BYTE "                           | |       ",0
+playInstruction3b BYTE "MOVE LEFT: ",0
+playInstruction3c BYTE "A",0
+playInstruction3d BYTE " ||| ",0
+playInstruction3e BYTE "MOVE RIGHT: ",0
+playInstruction3f BYTE "D",0
+playInstruction3g BYTE "       | |",10,0
+playInstruction4a BYTE "                           | |              ",0
+playInstruction4b BYTE "JUMP: ",0
+playInstruction4c BYTE "SPACEBAR",0
+playInstruction4d BYTE "                | |",10,0
+playInstruction5a BYTE "                           | |      ",0
+playInstruction5b BYTE "JUMP ",0
+playInstruction5c BYTE "FROM PLATFORM TO PLATFORM",0
+playInstruction5d BYTE "        | |",10,0
+playInstruction6a BYTE "                           | |     ",0
+playInstruction6b BYTE "FALL ",0
+playInstruction6c BYTE "TO THE GROUND ",0
+playInstruction6d BYTE "=== ",0
+playInstruction6e BYTE "GAME OVER",0
+playInstruction6f BYTE "       | |",10,0
+playInstruction7 BYTE "                           | |                                            | |",10,0
+playInstruction8a BYTE "                           | |              ",0
+playInstruction8b BYTE "PLAY:  ",0
+playInstruction8c BYTE "ENTER",0
+playInstruction8d BYTE "                  | |",10,0
+playInstruction9 BYTE "                         __| |____________________________________________| |__",10,0
+playInstruction10 BYTE "                        (__   ____________________________________________   __)",10,0
+playInstruction11 BYTE "                           | |                                            | |",10,0
+
+
+
+
 
 gameOverText1 BYTE "         ______    ______   __       __  ________         ______   __     __  ________  _______",10,0
 gameOverText2 BYTE "        /      \  /      \ |  \     /  \|        \       /      \ |  \   |  \|        \|       \",10,0
@@ -182,33 +233,154 @@ ChangeChar ENDP
 
 ShowHowToMenu PROC
     call Clrscr
-    mov edx, OFFSET howToPlay0
+
+    mov eax, lightCyan
+    call SetTextColor
+    mov edx, OFFSET howToPlayDisplay1
     call WriteString
-    mov edx, OFFSET howToPlay1
+    mov edx, OFFSET howToPlayDisplay2
     call WriteString
-    mov edx, OFFSET howToPlay2
+    mov edx, OFFSET howToPlayDisplay3
     call WriteString
-    mov edx, OFFSET howToPlay3
+    mov edx, OFFSET howToPlayDisplay4
     call WriteString
-    mov edx, OFFSET howToPlay4
+    mov edx, OFFSET howToPlayDisplay5
     call WriteString
-    mov edx, OFFSET howToPlay5
+    mov edx, OFFSET howToPlayDisplay6
     call WriteString
-    mov edx, OFFSET howToPlay6
+    mov edx, OFFSET howToPlayDisplay7
+    call WriteString
+    mov edx, OFFSET howToPlayDisplay8
+    call WriteString
+    mov edx, OFFSET howToPlayDisplay9
+    call WriteString
+    mov edx, OFFSET howToPlayDisplay10
+    call WriteString
+    mov edx, OFFSET howToPlayDisplay11
+    call WriteString
+    mov edx, OFFSET howToPlayDisplay12
+    call WriteString
+    mov edx, OFFSET howToPlayDisplay13
+    call WriteString
+    mov edx, OFFSET howToPlayDisplay14
+    call WriteString
+    mov edx, OFFSET howToPlayDisplay15
+    call WriteString
+    mov edx, OFFSET howToPlayDisplay16
     call WriteString
 
-    ; Top Border
-  
 
 
-    ;mov  eax, 10                 ; this is the x value
-    ;mov  ebx, 10                 ; this is the y value
-    ;mov  topLeftChar, 9556h
-    ;call ChangeChar
-    ;call GetConsoleUi
-    
-    
+    mov edx, OFFSET playInstruction1
+    call WriteString
+    mov edx, OFFSET playInstruction2
+    call WriteString
+    mov edx, OFFSET playInstruction3a
+    call WriteString
+    mov eax, white
+    call SetTextColor
+    mov edx, OFFSET playInstruction3b
+    call WriteString
+    mov eax, cyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction3c
+    call WriteString
+    mov eax, lightCyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction3d
+    call WriteString
+    mov eax, white
+    call SetTextColor
+    mov edx, OFFSET playInstruction3e
+    call WriteString
+    mov eax, cyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction3f
+    call WriteString
+    mov eax, lightCyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction3g
+    call WriteString
+    mov edx, OFFSET playInstruction4a
+    call WriteString
+    mov eax, white
+    call SetTextColor
+    mov edx, OFFSET playInstruction4b
+    call WriteString
+    mov eax, cyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction4c
+    call WriteString
+    mov eax, lightCyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction4d
+    call WriteString
+    mov edx, OFFSET playInstruction5a
+    call WriteString
+    mov eax, cyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction5b
+    call WriteString
+    mov eax, white
+    call SetTextColor
+    mov edx, OFFSET playInstruction5c
+    call WriteString
+    mov eax, lightCyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction5d
+    call WriteString
+    mov edx, OFFSET playInstruction6a
+    call WriteString
+    mov eax, Yellow
+    call SetTextColor
+    mov edx, OFFSET playInstruction6b
+    call WriteString
+    mov eax, white
+    call SetTextColor
+    mov edx, OFFSET playInstruction6c
+    call WriteString
+    mov eax, lightGreen
+    call SetTextColor
+    mov edx, OFFSET playInstruction6d
+    call WriteString
+    mov eax, lightRed
+    call SetTextColor
+    mov edx, OFFSET playInstruction6e
+    call WriteString
+    mov eax, lightCyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction6f
+    call WriteString
+    mov edx, OFFSET playInstruction7
+    call WriteString
+    mov edx, OFFSET playInstruction8a
+    call WriteString
+    mov eax, white
+    call SetTextColor
+    mov edx, OFFSET playInstruction8b
+    call WriteString
+    mov eax, cyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction8c
+    call WriteString
+    mov eax, lightCyan
+    call SetTextColor
+    mov edx, OFFSET playInstruction8d
+    call WriteString
+    mov edx, OFFSET playInstruction9
+    call WriteString
+    mov edx, OFFSET playInstruction10
+    call WriteString
+    mov edx, OFFSET playInstruction11
+    call WriteString
+
+waitForEnter:
+    call ReadChar
+    cmp al, 13                  ; ASCII code for enter
+    jne waitForEnter
+
     ret
+
 
 
 ShowHowToMenu ENDP
@@ -232,38 +404,20 @@ GameOver PROC
     call SetTextColor
     mov edx, OFFSET gameOverText1
     call WriteString
-    mov eax, red
-    call SetTextColor
     mov edx, OFFSET gameOverText2
-    mov eax, red
-    call SetTextColor
     call WriteString
     mov edx, OFFSET gameOverText3
-    mov eax, red
-    call SetTextColor
     call WriteString
     mov edx, OFFSET gameOverText4
-    mov eax, red
-    call SetTextColor
     call WriteString
     mov edx, OFFSET gameOverText5
-    mov eax, red
-    call SetTextColor
     call WriteString
     mov edx, OFFSET gameOverText6
-    mov eax, red
-    call SetTextColor
     call WriteString
     mov edx, OFFSET gameOverText7
-    mov eax, red
-    call SetTextColor
     call WriteString
     mov edx, OFFSET gameOverText8
-    mov eax, red
-    call SetTextColor
     call WriteString
-    mov eax, red
-    call SetTextColor
     mov edx, OFFSET gameOverText9
     call WriteString
 
