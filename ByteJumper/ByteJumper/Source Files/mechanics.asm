@@ -175,50 +175,67 @@ GetCurrentFrame ENDP
 
 ; Print coordinate given (EAX = x EBX = y)
 PrintPlayerPos PROC
-mov eax, white       ; Set EAX to green color
-call SetTextColor
-; Start location
-mov dh, 0
-mov dl, 40
-call Gotoxy
-mov edx, offset leftPrt
-call WriteString
-mov eax, xCoord 
-call WriteInt
-mov edx, offset rightPrt
-call WriteString
-mov eax, yCoord
-call WriteInt
-; FPS TEXT
-mov edx, offset fpsMsg
-call WriteString
-mov eax, fpsBuffer
-call WriteDec
-; INPUT TEXT
-mov edx, offset inputStr
-call WriteString
-; GROUND CHECK
-mov edx, offset groundedMsg
-call WriteString
-movzx eax, BYTE PTR checkGrounded
-call writeDec
-; JUMPING CHECK
-mov edx, offset jumpingMsg
-call WriteString
-movzx eax, BYTE PTR checkJumping
-call writeDec
+    mov eax, green
+    call SetTextColor
 
-;TIMER
-inc frameCount
-cmp frameCount, 20
-jne skipTimerUpdate
-call Timer@0
-mov frameCount, 0
+    ; Line 0 – Print X and Y
+    mov dh, 0
+    mov dl, 97
+    call Gotoxy
+    mov edx, offset leftPrt
+    call WriteString
+    mov eax, xCoord
+    call WriteInt
+    mov edx, offset rightPrt
+    call WriteString
+    mov eax, yCoord
+    call WriteInt
+
+    ; Line 1 – FPS
+    mov dh, 0
+    mov dl, 110
+    call Gotoxy
+    mov edx, offset fpsMsg
+    call WriteString
+    mov eax, fpsBuffer
+    call WriteDec
+
+    ; Line 2 – Input text (static unless you update inputStr dynamically)
+    mov dh, 0
+    mov dl, 52
+    call Gotoxy
+    mov edx, offset inputStr
+    call WriteString
+
+    ; Line 3 – Grounded
+    ;mov dh, 0
+    ;mov dl, 85
+    ;call Gotoxy
+    ;mov edx, offset groundedMsg
+    ;call WriteString
+    ;movzx eax, BYTE PTR checkGrounded
+    ;call WriteDec
+
+    ; Line 4 – Jumping
+    ;mov dh, 0
+    ;mov dl, 100
+    ;call Gotoxy
+    ;mov edx, offset jumpingMsg
+    ;call WriteString
+    ;movzx eax, BYTE PTR checkJumping
+    ;call WriteDec
+
+    ; Timer update every 20 frames
+    inc frameCount
+    cmp frameCount, 20
+    jne skipTimerUpdate
+    call Timer@0
+    mov frameCount, 0
 skipTimerUpdate:
 
-ret
-
+    ret
 PrintPlayerPos ENDP
+
 
 ; Method for updating the chars on the Gameboard
 ; Parameters: EAX (X coordinate) EBX (Y coordinate)
@@ -342,9 +359,6 @@ JumpCheckingMsg ENDP
 
 
 SpawnPlayer PROC 
-mov eax, magenta       ; Set EAX to green color
-call SetTextColor
-
 mov eax, STARTX
 mov ebx, STARTY
 mov xCoord, 56 ; Set player position from head Pos
@@ -415,6 +429,101 @@ call EndPhysicsThread@0
 
 ret
 EndGame ENDP
+
+CheckForCollisions PROC
+; EDX = direction 1- DOWN 2 - JUMP, 3 LEFT, 4 RIGHT
+; RETURNS 1 in AL if collision found 0 if not
+call GetPlayerXy         ; EAX = x (head), EBX = y (head)
+mov xCoord, eax
+mov yCoord, ebx
+cmp edx, 2
+jne skipJumpCollision_
+; Check jump collisions 
+mov eax, xCoord
+mov ebx, yCoord
+add ebx, 1
+call GetCharAt         
+cmp ax, 2588h 
+je collisionFound_
+mov eax, xCoord
+mov ebx, yCoord
+add eax, 1
+add ebx, 1
+call GetCharAt         
+cmp ax, 2588h 
+je collisionFound_
+mov eax, xCoord
+mov ebx, yCoord
+sub eax, 1
+add ebx, 1
+call GetCharAt         
+cmp ax, 2588h 
+je collisionFound_
+jmp collisionNotFound_ 
+skipJumpCollision_:
+cmp edx, 4
+jne skipRightCollision_
+; Check right collisions
+mov eax, xCoord
+mov ebx, yCoord
+add eax, 3
+call GetCharAt          
+cmp ax, 2588h 
+je collisionFound_
+mov eax, xCoord
+mov ebx, yCoord
+add eax, 3
+sub ebx, 1
+;mov newChar, '?'
+;call ChangeCharAt
+call GetCharAt          
+cmp ax, 2588h 
+je collisionFound_
+mov eax, xCoord
+mov ebx, yCoord
+add eax, 3
+sub ebx, 2
+call GetCharAt          
+cmp ax, 2588h 
+je collisionFound_
+
+jmp collisionNotFound_ 
+skipRightCollision_:
+cmp edx, 3
+jne skipLeftCollision_
+; Check left collisions
+mov eax, xCoord
+mov ebx, yCoord
+sub eax, 3
+call GetCharAt          
+cmp ax, 2588h 
+je collisionFound_
+mov eax, xCoord
+mov ebx, yCoord
+sub eax, 3
+sub ebx, 1
+call GetCharAt          
+cmp ax, 2588h 
+je collisionFound_
+mov eax, xCoord
+mov ebx, yCoord
+sub eax, 3
+sub ebx, 2
+call GetCharAt          
+cmp ax, 2588h 
+je collisionFound_
+skipLeftCollision_:
+jmp endCollisionCheck_
+
+collisionFound_:
+mov al, 1
+jmp endCollisionCheck_
+collisionNotFound_:
+mov al, 0
+endCollisionCheck_:
+
+ret
+CheckForCollisions ENDP
 
 
 DisplayPlatform PROC

@@ -64,12 +64,13 @@ main PROC
     ENABLE_EXTENDED_FLAGS  EQU 0x0080
    
     ; Game start 
+     call Randomize
      call GameStart@0
      call GameEngine@0
      ;call ShowHowToMenu@0
 
      ; display random platforms
-     call Randomize
+    
      
      
 

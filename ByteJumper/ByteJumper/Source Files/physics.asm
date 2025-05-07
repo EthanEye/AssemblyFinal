@@ -10,6 +10,7 @@ EXTERN SetPlayerPos@0 : PROC
 EXTERN CreateThread@24 : PROC
 EXTERN GroundCheckMsg@0 : PROC
 EXTERN JumpCheckingMsg@0 : PROC
+EXTERN CheckForCollisions@0 : PROC
 EXTERN EndGame@0 : PROC
 EXTERN ExitThread@4 : PROC
 
@@ -143,6 +144,9 @@ Movement PROC
     Jump_:
     cmp edx, 2
     jne Left_
+    call CheckForCollisions@0
+    cmp al, 1 
+    je endMovementProc_ ; Collision 
     cmp isGrounded, 1     ; Check if on ground
     jne Left_             ; If not grounded, skip jump
     mov dl, 1
@@ -177,6 +181,9 @@ Movement PROC
     Left_:
     cmp edx, 3
     jne Right_
+    call CheckForCollisions@0
+    cmp al, 1 
+    je endMovementProc_ ; Collision 
     ; 1. Get player position
     call GetPlayerXy@0
     mov xCoord, eax
@@ -212,6 +219,9 @@ Movement PROC
     Right_:
     cmp edx, 4
     jne endMovementProc_
+    call CheckForCollisions@0
+    cmp al, 1 
+    je endMovementProc_ ; Collision 
     ; 1. Get player position
     call GetPlayerXy@0
     mov xCoord, eax
@@ -258,7 +268,6 @@ UpdatePlayerBody PROC
     call GetPlayerXy@0         ; EAX = x (head), EBX = y (head)
     mov xCoord, eax
     mov yCoord, ebx
-
     ; -------- Draw torso below head --------
     mov eax, xCoord
     mov ebx, yCoord
@@ -411,6 +420,7 @@ ret
 GroundCheck ENDP
 
 JumpProc PROC
+
     ; 1. Get player position
     call GetPlayerXy@0
     mov xCoord, eax
@@ -442,6 +452,7 @@ ret
 JumpProc ENDP
 
 GravityProc PROC
+  
 ; 1. Get player position
     call GetPlayerXy@0
     mov xCoord, eax
