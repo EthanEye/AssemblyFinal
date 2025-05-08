@@ -95,12 +95,16 @@ GameEngine PROC
 
 ; Create Start platform at 1, 53
 
-mov eax, 53
+mov eax, 58
 mov ebx, 1
 call CreatePlatform@0
-mov eax, 60
-mov ebx, 8
+mov eax, 20
+mov ebx, 20
 call CreatePlatform@0
+
+   
+
+
 call SpawnPlayer
 
 
