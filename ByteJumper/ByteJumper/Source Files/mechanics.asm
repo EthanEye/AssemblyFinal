@@ -14,8 +14,8 @@ EXTERN StartPhysicsThread@0 : PROC
 EXTERN EndInputThread@0 : PROC
 EXTERN EndPhysicsThread@0 : PROC
 EXTERN GameOver@0 : PROC
-EXTERN CreatePlatform@0 : PROC
-EXTERN UpdatePlatforms@0 : PROC
+EXTERN ShowHowToMenu@0 : PROC
+
 ; SCREEN HEIGHT AND WIDTH
 ROWS = 25 ; Y
 COLS = 120 ; X  
@@ -91,20 +91,7 @@ GameEngine PROC
    
 ;mov eax, 400
 ;call GetCoordinate
-;call StartPlatform 
-
-; Create Start platform at 1, 53
-
-mov eax, 58
-mov ebx, 1
-call CreatePlatform@0
-mov eax, 20
-mov ebx, 20
-call CreatePlatform@0
-
-   
-
-
+call StartPlatform 
 call SpawnPlayer
 
 
@@ -118,10 +105,6 @@ mov dl, gameRunning
 cmp dl , 0
 je mainLoop_
 call Gotoxy             ; Move the cursor
-cmp checkJumping, 1
-jne skipPlatforms_
-call UpdatePlatforms@0    ; Update platforms
-skipPlatforms_:
 call GetCurrentFrame    ; Print Current Array
 call PrintPlayerPos     ; Current player pos
 jmp mainLoop_
@@ -407,7 +390,24 @@ call ChangeCharAt
 ret
 SpawnPlayer ENDP
 
+StartPlatform PROC
+mov eax, cyan
+call SetTextColor
+ call WriteString
+mov ebx, 1              ; Y position at bottom of screen (adjust if needed)
+mov ecx, 0              ; ECX = loop counter (X position)
+platform_loop:
+mov eax, ecx             ; EAX = X position
+mov newChar, 2588h       ; solid block 
+call ChangeCharAt
+inc ecx
+cmp ecx, 100             ; screen width
+jl platform_loop         ; loop until x = 119
 
+call DisplayPlatform
+
+ret
+StartPlatform ENDP
 
 EndGame PROC
  mov gameRunning, 0
@@ -545,6 +545,28 @@ endCollisionCheck_:
 ret
 CheckForCollisions ENDP
 
+;; display platform procedure uses a loop to generate random platfors as well as displays them everytime game is run 5.1.2025
+DisplayPlatform PROC
+    mov ecx, 6              ; Number of platforms
+    mov ebx, 5              ; Starting Y position (low on screen)
+    
+platform_loop:
+    push ecx                ; Save loop counter
+    push ebx                ; Save current Y
+
+    ; Generate random X position (safe range: 0 to COLS - platformWidth)
+    mov eax, COLS - 10
+    call RandomRange        ; EAX = random X between 0 and (COLS - 10)
+
+    ; Draw 10-character platform at random X (EAX), fixed Y (EBX)
+    mov edi, 0              ; Counter for platform width
+draw_loop:
+    
+    push eax                ; Save X
+    push ebx                ; Save Y
+    add eax, edi            ; X + offset
+    mov newChar, 2588h
+    call ChangeCharAt
 
 
 END

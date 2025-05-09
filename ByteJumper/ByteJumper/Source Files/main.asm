@@ -65,16 +65,15 @@ main PROC
     ; Game start 
      ;call Randomize
      call GameStart@0
-     call GameEngine@0
      ;call ShowHowToMenu@0
+     call GameEngine@0
+
 
      ; display random platforms
     
      
      
 
-    ; Game over
-    ; call GameOver@0
     
      
     
