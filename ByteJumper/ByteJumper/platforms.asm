@@ -17,11 +17,13 @@ index DWORD 1
 
 .code
 ; Start position: EAX = X, EBX = Y 
+; mov eax, platformsX[ecx*4]    ; load value
+; mov platformsX[ecx*4], eax    ; store value
 CreatePlatform PROC
     mov xCoord, eax
     mov yCoord, ebx
 
-    ; Store new x, y position at index and inc index
+    ; Store first x, y position at index XY to keep track of each platform
     mov ecx, index
     mov platformsX[ecx*4], eax    ; store value
     mov platformsY[ecx*4], eax    ; store value
@@ -46,20 +48,31 @@ CreatePlatform PROC
 endCreateLoop_:
 ret
 CreatePlatform ENDP
-;mov eax, platformsX[ecx*4]    ; load value
-;mov platformsX[ecx*4], eax    ; store value
-; Set start platform x position at index = ECX new number = EAX
-SetStartXY PROC
 
 
-endStartXY_:
-
-ret
-SetStartXY ENDP
 
 
 UpdatePlatforms PROC
+mov ecx, 0        
+    checkLoop_:
+    cmp ecx, 36                   ; Number of platform slots
+    jge endCheckLoop_
+    mov eax, platformsX[ecx*4]    ; Load value at platformsX[esi]
+    cmp eax, 0
+    je skip_
+    mov eax, platformsY[ecx*4]    ; Load value at platformsY[esi]
+    call ClearPlatformXy          ; Clear platform and move down one
+    ; index ESI is active (not zero)
+    ; Do something here if platform is active
+   
+skip_:
+    inc ecx
+    loop checkLoop_
+   
 
+
+
+endCheckLoop_:
 ret
 UpdatePlatforms ENDP
 
