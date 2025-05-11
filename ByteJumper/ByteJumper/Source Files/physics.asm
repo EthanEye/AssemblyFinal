@@ -21,13 +21,13 @@ EXTERN ExitThread@4 : PROC
 gravityDelay DWORD 80   ; Initial delay time (ms)
 isJumping BYTE 0
 isGrounded BYTE 1
-threadRunning BYTE 0
 direction DWORD 4 dup(?)
 xCoord DWORD ?
 yCoord DWORD ?
 newChar WORD ?
 textMsg BYTE "Test"
 collisionLock DWORD 0
+physicsThreadRunning BYTE 1
 ; GAME PHYSICS
 
 threadID DWORD ?
@@ -45,17 +45,18 @@ StartPhysicsThread PROC
     push 0                  ; lpThreadAttributes (default)
     call CreateThread@24
     mov threadHandle, eax   ; Store handle if needed
-    mov threadRunning, 1
     ret
   StartPhysicsThread ENDP
 
 
  Gravity PROC
+   
+ 
     mov eax, 500
     call Delay
 groundCheckLoop_:
     ; Check thread 
-    mov dl, threadRunning
+    mov dl, physicsThreadRunning
     cmp dl, 0
     je endGravityLoop_
     mov eax, 1
@@ -133,8 +134,9 @@ endJump_:
     jmp groundCheckLoop_
 
 endGravityLoop_:
-    
-ret
+  push 0
+  call ExitThread@4 
+  ret
 Gravity ENDP
 
 
@@ -410,8 +412,6 @@ cmp ebx, 1
 je gameOver_
 jmp endBoundCheck_
 gameOver_:
-
-mov threadRunning, 0
 call EndGame@0
 
 
@@ -490,8 +490,7 @@ GravityProc ENDP
 
 
 EndPhysicsThread PROC
-push 0              ; Exit code (0 = success)
-call ExitThread@4     ; Gracefully end this thread
+mov physicsThreadRunning, 0
 
 ret
 EndPhysicsThread ENDP

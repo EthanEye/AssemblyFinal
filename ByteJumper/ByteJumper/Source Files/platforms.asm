@@ -23,10 +23,10 @@ CreatePlatform PROC
     mov xCoord, eax
     mov yCoord, ebx
     ; Check if theres space for another platform
-    mov ecx, 0
+    mov ecx, -1
     scanForZero_:
-    inc ecx 
-    cmp ecx, 6 ; 6 X and 6 y values ( 6 PLATFORMS MAX)
+    inc ecx
+    cmp ecx, 7 ; 6 X and 6 y values ( 6 PLATFORMS MAX)
     je endCreatePlatform_
     ; Check if index is 0 (If theres no zeros platform cant be created yet ; already 6 platforms)
     mov eax, platformsX[ecx*4]
@@ -42,7 +42,6 @@ CreatePlatform PROC
     mov platformsY[ecx*4], ebx    ; store Y value
     ; Platform is created here
     createPlatform_:
-
     mov esi, 0
     pLoop_:
     inc esi
@@ -55,14 +54,8 @@ CreatePlatform PROC
     inc eax
     mov xCoord, eax
     call ChangeCharAt@0
-    
     jmp pLoop_
-   
-   
-   
-   endCreatePlatform_:
-
-
+    endCreatePlatform_:
 ret
 CreatePlatform ENDP
 
@@ -70,19 +63,57 @@ CreatePlatform ENDP
 
 
 UpdatePlatforms PROC
+; This function is called when player is jumping to move platforms down
+mov esi, 0
+checkPLoop_:
+
+cmp esi, 6
+je endCheckPLoop_ 
+; Check if index is 0
+mov eax, platformsX[esi*4]
+mov ebx, platformsY[esi*4]
+cmp eax, 0
+je skipThisIndex_
+; If its not zero update the platform at that location
+mov xCoord, eax
+mov yCoord, ebx
+;call ClearPlatformXy
+
+skipThisIndex_:
+inc esi
 
 
-endCheckLoop_:
+endCheckPLoop_:
 ret
 UpdatePlatforms ENDP
 
 
-ClearPlatformXy PROC
+PlatformDebugger PROC 
+  mov esi, 0              ; index
 
+printLoop:
+    cmp esi, 6
+    jge endPrintLoop        ; done
+
+    ; Load and print platformsX[esi]
+    mov eax, platformsX[esi*4]
+    call WriteInt
+   
+
+
+
+    ; Load and print platformsY[esi]
+    mov eax, platformsY[esi*4]
+    call WriteInt
+    
+
+    inc esi
+    jmp printLoop
+
+endPrintLoop:
 
 ret
-ClearPlatformXy ENDP
-
+PlatformDebugger ENDP
 ; Checks for avalible index and updates IndexX and IndexY
 
 

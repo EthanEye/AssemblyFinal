@@ -16,6 +16,8 @@ EXTERN EndPhysicsThread@0 : PROC
 EXTERN GameOver@0 : PROC
 EXTERN ShowHowToMenu@0 : PROC
 EXTERN CreatePlatform@0 : PROC
+EXTERN UpdatePlatforms@0: PROC
+EXTERN PlatformDebugger@0: PROC
 
 ; SCREEN HEIGHT AND WIDTH
 ROWS = 25 ; Y
@@ -68,7 +70,9 @@ GameEngine PROC
     call StartPhysicsThread@0
  ; Create new thread for player input
     call StartInputThread@0
-
+    mov dl, gameRunning
+    cmp dl, 0
+    je gameIsOver_
 
   ; Get console handle once
     push -11
@@ -94,6 +98,14 @@ mov eax, 53
 mov ebx, 1
 call CreatePlatform@0
 
+
+mov eax, 25
+mov ebx, 8
+call CreatePlatform@0
+mov eax, 32
+mov ebx, 15
+call CreatePlatform@0
+
 call SpawnPlayer
 
 
@@ -110,13 +122,15 @@ mov al, checkJumping
 cmp al, 1
 jne skipPlatforms_
 ;Update
+call UpdatePlatforms@0
 skipPlatforms_:
 call Gotoxy             ; Move the cursor
 call GetCurrentFrame    ; Print Current Array
 call PrintPlayerPos     ; Current player pos
 
-jmp mainLoop_
 
+jmp mainLoop_
+gameIsOver_:
 ret
 GameEngine ENDP
 
@@ -160,33 +174,17 @@ endFill:
 GetCurrentFrame ENDP
 
 
-; Converts array index into X, Y Coordinates
-; Parameters: EAX (gameBoard index)
-;GetCoordinate PROC
-    ;xor edx, edx            ; Clear EDX before DIV
-    ;mov ebx, COLS			; Adjust for width of board
-    ;div ebx					; Divides EDX by EAX        
-	;mov ecx, eax            ; Save row
-	;call Crlf               ; Move to new line before printing
-	; Print col
-	;mov xCoord, edx         ; Store X value
-    ;mov eax, edx
-    ;call WriteDec
-	; Print comma
-    ;mov edx, OFFSET commaStr
-    ;call WriteString
-	; Print row
-	;mov eax, ROWS       ; use the ROWS constant
-	;sub eax, ecx        ; eax = ROWS - row
-	;mov YCoord, eax     ; store the flipped Y value
-	;call WriteDec       ; print flipped Y
-	;ret
-;GetCoordinate ENDP
 
-; Print coordinate given (EAX = x EBX = y)
 PrintPlayerPos PROC
+    ; Platforms Arrays
     mov eax, green
     call SetTextColor
+
+      
+    mov dh, 0
+    mov dl, 97
+    ;call PlatformDebugger@0
+  
 
     ; Line 0 – Print X and Y
     mov dh, 0
@@ -217,30 +215,13 @@ PrintPlayerPos PROC
     mov edx, offset inputStr
     call WriteString
 
-    ; Line 3 – Grounded
-    ;mov dh, 0
-    ;mov dl, 85
-    ;call Gotoxy
-    ;mov edx, offset groundedMsg
-    ;call WriteString
-    ;movzx eax, BYTE PTR checkGrounded
-    ;call WriteDec
-
-    ; Line 4 – Jumping
-    ;mov dh, 0
-    ;mov dl, 100
-    ;call Gotoxy
-    ;mov edx, offset jumpingMsg
-    ;call WriteString
-    ;movzx eax, BYTE PTR checkJumping
-    ;call WriteDec
-
     ; Timer update every 20 frames
     inc frameCount
     cmp frameCount, 20
     jne skipTimerUpdate
     call Timer@0
     mov frameCount, 0
+  
 skipTimerUpdate:
 
     ret
@@ -251,7 +232,8 @@ PrintPlayerPos ENDP
 ; Parameters: EAX (X coordinate) EBX (Y coordinate)
 ; Parameters: EAX = X, EBX = Y
 ChangeCharAt PROC
-  
+    push eax
+    push ebx
     ; Flip Y: edx = ROWS - ebx
     mov edx, ROWS
     sub edx, ebx              ; flippedY
@@ -266,7 +248,8 @@ ChangeCharAt PROC
     ; Write new character to gameBoard
     mov ax, newChar
     mov WORD PTR gameBoard[edx], ax
- 
+    pop ebx
+    pop eax
     ret
 ChangeCharAt ENDP
 
@@ -367,8 +350,6 @@ JumpCheckingMsg PROC
 ret
 JumpCheckingMsg ENDP
 
-
-
 SpawnPlayer PROC 
 mov eax, STARTX
 mov ebx, STARTY
@@ -409,14 +390,15 @@ fillLoop:
     mov WORD PTR [esi], ' '          ; store space character
     add esi, 2                       ; move to next WORD
     loop fillLoop
+
+call EndInputThread@0
+call EndPhysicsThread@0
 mov edx, 0              ; Column
 mov ecx, 0              ; Row
 call Gotoxy             ; Move the cursor
 call ClrScr
-call GameOver@0
-call EndInputThread@0
-call EndPhysicsThread@0
-
+call GameOver@0         ; Game over msg
+call EndMainThread
 ret
 EndGame ENDP
 
@@ -535,6 +517,13 @@ endCollisionCheck_:
 
 ret
 CheckForCollisions ENDP
+
+
+EndMainThread PROC
+mov gameRunning, 0
+
+ret
+EndMainThread ENDP
 
 
 

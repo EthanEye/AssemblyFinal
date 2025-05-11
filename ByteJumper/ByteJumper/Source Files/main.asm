@@ -20,7 +20,6 @@ EXTERN SetConsoleTitleA@4: PROC
 EXTERN GetConsoleUi@0 : PROC
 EXTERN GameOver@0 : near
 EXTERN ShowHowToMenu@0 : near
-EXTERN GameOver@0 : near
 
 
 .data
@@ -61,23 +60,16 @@ main PROC
     STD_INPUT_HANDLE EQU -10
     ENABLE_QUICK_EDIT_MODE EQU 0x0040
     ENABLE_EXTENDED_FLAGS  EQU 0x0080
-   
+    
+
+      gameStart_:
     ; Game start 
      ;call Randomize
      call GameStart@0
      ;call ShowHowToMenu@0
      call GameEngine@0
 
-
-     ; display random platforms
     
-     
-     
-
-    
-     
-    
-    exit
 main ENDP
 
 END main

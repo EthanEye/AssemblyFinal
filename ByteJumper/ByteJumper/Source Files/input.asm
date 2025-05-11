@@ -30,6 +30,7 @@ prevTick   DWORD ?
 currTick   DWORD ?
 frameTime  DWORD ?
 fpsBuffer  BYTE "     FPS:", 0
+inputThreadRunning BYTE 1
 
 
 .code
@@ -58,8 +59,10 @@ StartInputThread PROC
     call Delay
     ; Thread loop is here
       threadLoop_:
-     
-    call FrameCounter
+      mov dl, inputThreadRunning
+      cmp dl, 0
+      je endInputThread_
+      call FrameCounter
     ; enter critical section
     
    
@@ -79,6 +82,13 @@ StartInputThread PROC
     call Delay
     ; Main thread work
    jmp threadLoop_
+
+
+   endInputThread_:
+    push 0
+    call ExitThread@4 
+
+ret
    ret
 PlayerInput ENDP
 
@@ -165,8 +175,7 @@ skipPrint:
 FrameCounter ENDP
 
 EndInputThread PROC
-push 0              ; Exit code (0 = success)
-call ExitThread@4     ; Gracefully end this thread
+mov inputThreadRunning, 0
 ret
 EndInputThread ENDP
 
