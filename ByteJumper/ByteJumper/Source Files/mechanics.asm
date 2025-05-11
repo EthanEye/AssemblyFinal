@@ -181,12 +181,11 @@ PrintPlayerPos PROC
     call SetTextColor
 
       
-    mov dh, 0
-    mov dl, 97
-    ;call PlatformDebugger@0
+ 
+    call PlatformDebugger@0
   
 
-    ; Line 0 – Print X and Y
+    ;Line 0 – Print X and Y
     mov dh, 0
     mov dl, 97
     call Gotoxy

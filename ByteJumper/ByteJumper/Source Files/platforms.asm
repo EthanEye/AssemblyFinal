@@ -12,6 +12,7 @@ platformsX DWORD 36 DUP(0)      ; Keep track of x start positions for each platf
 platformsY DWORD 36 DUP(0)      ; Keep track of y start positions for each platform
 xCoord DWORD ?
 yCoord DWORD ?
+spacer BYTE "   ", 0
 index DWORD 0
 
 .code
@@ -77,11 +78,13 @@ je skipThisIndex_
 ; If its not zero update the platform at that location
 mov xCoord, eax
 mov yCoord, ebx
-;call ClearPlatformXy
+; Save index of platforms array
+mov index, esi
+call UpdatePlatformXy
 
 skipThisIndex_:
 inc esi
-
+jmp checkPLoop_ 
 
 endCheckPLoop_:
 ret
@@ -89,6 +92,7 @@ UpdatePlatforms ENDP
 
 
 PlatformDebugger PROC 
+  
   mov esi, 0              ; index
 
 printLoop:
@@ -99,13 +103,17 @@ printLoop:
     mov eax, platformsX[esi*4]
     call WriteInt
    
-
+    ; Add space separator
+    mov edx, offset spacer
+    call WriteString
 
 
     ; Load and print platformsY[esi]
     mov eax, platformsY[esi*4]
     call WriteInt
     
+    mov edx, offset spacer
+    call WriteString
 
     inc esi
     jmp printLoop
@@ -116,6 +124,30 @@ ret
 PlatformDebugger ENDP
 ; Checks for avalible index and updates IndexX and IndexY
 
+
+UpdatePlatformXy PROC
+mov eax, xCoord 
+mov ebx, yCoord
+mov edx, index
+; Move platform down
+dec ebx
+; Delete plateform if y value is negative
+cmp ebx, 0
+jle deletePlatform_
+mov platformsX[edx*4], eax
+mov platformsY[edx*4], ebx
+jmp endUpdateP_
+
+deletePlatform_:
+
+mov platformsX[edx*4], 0
+mov platformsY[edx*4], 0
+
+
+endUpdateP_:
+
+ret
+UpdatePlatformXy ENDP
 
 
 END
