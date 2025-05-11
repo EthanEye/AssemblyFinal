@@ -144,10 +144,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <MASM Include="platforms.asm">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Irvine\irvine</DeploymentContent>
-      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Irvine\irvine</IncludePaths>
-    </MASM>
     <MASM Include="Source Files\graphics.asm">
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Irvine\irvine</IncludePaths>
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Irvine\irvine</IncludePaths>
@@ -165,6 +161,7 @@
     <MASM Include="Source Files\physics.asm">
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Irvine\irvine</IncludePaths>
     </MASM>
+    <MASM Include="Source Files\platforms.asm" />
     <MASM Include="Source Files\readWriteProc.asm">
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Irvine\irvine</IncludePaths>
     </MASM>

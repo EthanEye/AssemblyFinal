@@ -15,6 +15,7 @@ EXTERN EndInputThread@0 : PROC
 EXTERN EndPhysicsThread@0 : PROC
 EXTERN GameOver@0 : PROC
 EXTERN ShowHowToMenu@0 : PROC
+EXTERN CreatePlatform@0 : PROC
 
 ; SCREEN HEIGHT AND WIDTH
 ROWS = 25 ; Y
@@ -89,9 +90,10 @@ GameEngine PROC
     ; Main loop or other code
     call Crlf
    
-;mov eax, 400
-;call GetCoordinate
-call StartPlatform 
+mov eax, 53
+mov ebx, 1
+call CreatePlatform@0
+
 call SpawnPlayer
 
 
@@ -104,9 +106,15 @@ mov ecx, 0              ; Row
 mov dl, gameRunning 
 cmp dl , 0
 je mainLoop_
+mov al, checkJumping
+cmp al, 1
+jne skipPlatforms_
+;Update
+skipPlatforms_:
 call Gotoxy             ; Move the cursor
 call GetCurrentFrame    ; Print Current Array
 call PrintPlayerPos     ; Current player pos
+
 jmp mainLoop_
 
 ret
@@ -243,6 +251,7 @@ PrintPlayerPos ENDP
 ; Parameters: EAX (X coordinate) EBX (Y coordinate)
 ; Parameters: EAX = X, EBX = Y
 ChangeCharAt PROC
+  
     ; Flip Y: edx = ROWS - ebx
     mov edx, ROWS
     sub edx, ebx              ; flippedY
@@ -257,6 +266,7 @@ ChangeCharAt PROC
     ; Write new character to gameBoard
     mov ax, newChar
     mov WORD PTR gameBoard[edx], ax
+ 
     ret
 ChangeCharAt ENDP
 
@@ -283,7 +293,6 @@ GetCharAt PROC
     shl edx, 1                ; edx = edx * 2
 
     ; Load char at X, Y into ax
-    
     mov ax, WORD PTR gameBoard[edx]
 
 ret
@@ -390,24 +399,6 @@ call ChangeCharAt
 ret
 SpawnPlayer ENDP
 
-StartPlatform PROC
-mov eax, cyan
-call SetTextColor
- call WriteString
-mov ebx, 1              ; Y position at bottom of screen (adjust if needed)
-mov ecx, 0              ; ECX = loop counter (X position)
-platform_loop:
-mov eax, ecx             ; EAX = X position
-mov newChar, 2588h       ; solid block 
-call ChangeCharAt
-inc ecx
-cmp ecx, 100             ; screen width
-jl platform_loop         ; loop until x = 119
-
-call DisplayPlatform
-
-ret
-StartPlatform ENDP
 
 EndGame PROC
  mov gameRunning, 0
@@ -545,28 +536,7 @@ endCollisionCheck_:
 ret
 CheckForCollisions ENDP
 
-;; display platform procedure uses a loop to generate random platfors as well as displays them everytime game is run 5.1.2025
-DisplayPlatform PROC
-    mov ecx, 6              ; Number of platforms
-    mov ebx, 5              ; Starting Y position (low on screen)
-    
-platform_loop:
-    push ecx                ; Save loop counter
-    push ebx                ; Save current Y
 
-    ; Generate random X position (safe range: 0 to COLS - platformWidth)
-    mov eax, COLS - 10
-    call RandomRange        ; EAX = random X between 0 and (COLS - 10)
-
-    ; Draw 10-character platform at random X (EAX), fixed Y (EBX)
-    mov edi, 0              ; Counter for platform width
-draw_loop:
-    
-    push eax                ; Save X
-    push ebx                ; Save Y
-    add eax, edi            ; X + offset
-    mov newChar, 2588h
-    call ChangeCharAt
 
 
 END
