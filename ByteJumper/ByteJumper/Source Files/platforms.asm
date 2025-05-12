@@ -10,10 +10,10 @@ EXTERN SetNewChar@0 : PROC
 ;PLATFORM ARRAYS:
 platformsX DWORD 36 DUP(0)      ; Keep track of x start positions for each platform
 platformsY DWORD 36 DUP(0)      ; Keep track of y start positions for each platform
-xCoord DWORD ?
-yCoord DWORD ?
+xVal DWORD ?
+yVal DWORD ?
 spacer BYTE "   ", 0
-index DWORD 0
+indx DWORD 0
 
 .code
 ; Start position: EAX = X, EBX = Y 
@@ -22,8 +22,8 @@ index DWORD 0
 CreatePlatform PROC
     push esi
     ; Store new X and Y value (Start of where platform is drawn from)
-    mov xCoord, eax
-    mov yCoord, ebx
+    mov xVal, eax
+    mov yVal, ebx
     ; Check if theres space for another platform
     mov ecx, -1
     scanForZero_:
@@ -35,10 +35,10 @@ CreatePlatform PROC
     cmp eax, 0
     jne scanForZero_
     ; If a Zero is found then It will create a new platform here given the X and Y position
-    mov index, ecx   ; Store index where zero was found
+    mov indx, ecx   ; Store index where zero was found
     ; Pull parameters where we want the new platform to be spawned
-    mov eax, xCoord
-    mov ebx, yCoord
+    mov eax, xVal
+    mov ebx, yVal
     ; Also store the new platform position 
     mov platformsX[ecx*4], eax    ; store X value
     mov platformsY[ecx*4], ebx    ; store Y value
@@ -51,10 +51,10 @@ CreatePlatform PROC
     je endCreatePlatform_
     mov cx, 2588h
     call SetNewChar@0
-    mov eax, xCoord
-    mov ebx, yCoord
+    mov eax, xVal
+    mov ebx, yVal
     inc eax
-    mov xCoord, eax
+    mov xVal, eax
     call ChangeCharAt@0
     jmp pLoop_
     endCreatePlatform_:
@@ -69,6 +69,7 @@ push esi
 call ClearPlatforms 
 
 
+
 ; This function is called when player is jumping to move platforms down
 mov esi, 0
 checkPLoop_:
@@ -80,15 +81,22 @@ cmp eax, 0
 je skipThisIndex_
 mov ebx, platformsY[esi*4]
 ; If its not zero update the platform at that location
-mov index, esi
-mov xCoord, eax
-mov yCoord, ebx
+mov indx, esi
+mov xVal, eax
+mov yVal, ebx
 call UpdatePlatformXy
 skipThisIndex_:
 inc esi
 jmp checkPLoop_ 
 endCheckPLoop_:
+
+
+
 ; Redraw platforms
+
+call RedrawPlatforms 
+
+
 pop esi
 ret
 UpdatePlatforms ENDP
@@ -125,9 +133,9 @@ PlatformDebugger ENDP
 
 
 UpdatePlatformXy PROC
-mov eax, xCoord 
-mov ebx, yCoord
-mov edx, index
+mov eax, xVal 
+mov ebx, yVal
+mov edx, indx
 dec ebx
 ; Delete plateform if y value is below this number
 cmp ebx, 0
@@ -158,8 +166,8 @@ ClearPlatforms PROC
     cmp eax, 0
     je skipThisOne     ; if this slot is empty, skip
     
-    mov index, esi
-    
+    mov indx, esi
+    ; If index is not zero clear this platform
     call ClearPlatformAtIndex
     
 skipThisOne:
@@ -173,24 +181,72 @@ ClearPlatforms ENDP
 
 ClearPlatformAtIndex PROC
 push esi
-mov edx, index
+mov edx, indx
+mov eax, platformsX[edx*4]
+mov ebx, platformsY[edx*4]
 
-mov cx, '?'
+mov cx, ' '
 call SetNewChar@0
-
 mov esi, 0
 eraseLoop_:
 cmp esi, 6
 je endErase_
-mov eax, platformsX[edx*4]
-mov ebx, platformsY[edx*4]
 call ChangeCharAt@0
-
-
-
+inc eax
+inc esi
+jmp eraseLoop_
 endErase_:
 pop esi
 ret
 ClearPlatformAtIndex ENDP
+
+
+
+RedrawPlatforms PROC
+push esi
+mov esi, 0
+redrawLoop_:
+cmp esi, 6
+jge endRedrawLoop_ 
+mov eax, platformsX[esi*4]
+cmp eax, 0
+je skipThisRedraw_
+
+mov indx, esi
+; If index is not zero redraw this platform   
+call RedrawPlatformAtIndex
+
+skipThisRedraw_:
+inc esi
+jmp redrawLoop_
+
+endRedrawLoop_:
+
+pop esi
+ret
+RedrawPlatforms ENDP
+
+
+RedrawPlatformAtIndex PROC
+push esi
+push ebx
+mov edx, indx
+mov eax, platformsX[edx*4]
+mov ebx, platformsY[edx*4]
+mov cx, 2588h
+call SetNewChar@0
+mov esi, 0
+redrawIndexLoop_:
+cmp esi, 6
+jge endRedrawIndexLoop_ 
+call ChangeCharAt@0
+inc eax
+inc esi
+jmp redrawIndexLoop_
+endRedrawIndexLoop_:
+pop ebx
+pop esi
+ret
+RedrawPlatformAtIndex ENDP
 
 END

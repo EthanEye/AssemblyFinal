@@ -118,16 +118,16 @@ mov ecx, 0              ; Row
 mov dl, gameRunning 
 cmp dl , 0
 je mainLoop_
+
+call Gotoxy             ; Move the cursor
+call GetCurrentFrame    ; Print Current Array
+call PrintPlayerPos     ; Current player pos
 mov al, checkJumping
 cmp al, 1
 jne skipPlatforms_
 ;Update
 call UpdatePlatforms@0
 skipPlatforms_:
-call Gotoxy             ; Move the cursor
-call GetCurrentFrame    ; Print Current Array
-call PrintPlayerPos     ; Current player pos
-
 
 jmp mainLoop_
 gameIsOver_:
@@ -182,7 +182,7 @@ PrintPlayerPos PROC
 
       
  
-    call PlatformDebugger@0
+    ;call PlatformDebugger@0
   
 
     ;Line 0 – Print X and Y
