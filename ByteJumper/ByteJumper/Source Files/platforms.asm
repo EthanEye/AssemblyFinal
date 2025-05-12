@@ -67,9 +67,6 @@ push esi
 
 ; Clear platforms off screen before values are updated then redrawn
 call ClearPlatforms 
-
-
-
 ; This function is called when player is jumping to move platforms down
 mov esi, 0
 checkPLoop_:
@@ -90,7 +87,9 @@ inc esi
 jmp checkPLoop_ 
 endCheckPLoop_:
 
+; Randomly generate new platforms
 
+call RandomPlatform
 
 ; Redraw platforms
 
@@ -248,5 +247,21 @@ pop ebx
 pop esi
 ret
 RedrawPlatformAtIndex ENDP
+
+
+RandomPlatform PROC
+    call GetPlayerXy@0
+    cmp ebx, 5
+    jle skipNewPlatform_
+    mov eax, 100
+    call  RandomRange
+    mov ebx, 25
+    call  CreatePlatform
+    skipNewPlatform_:
+    ret
+RandomPlatform ENDP
+
+
+
 
 END

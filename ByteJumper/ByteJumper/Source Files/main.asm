@@ -23,7 +23,7 @@ EXTERN ShowHowToMenu@0 : near
 
 
 .data
-titleStr BYTE "Byte Jumper", 0
+titleStr BYTE "Byte Jumper - (Still a work in progress)", 0
 GWL_STYLE      EQU -16
 WS_MAXIMIZEBOX EQU 00010000h
 WS_THICKFRAME  EQU 00040000h
@@ -63,6 +63,7 @@ main PROC
     
 
       gameStart_:
+    
      call GameStart@0
      call ShowHowToMenu@0
      call GameEngine@0
