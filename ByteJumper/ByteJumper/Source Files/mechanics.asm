@@ -179,10 +179,10 @@ PrintPlayerPos PROC
     call SetTextColor
     
     ; !!!!!!FOR DEBUGGIN PLATFORM ARRAY!!!
-    call PlatformDebugger@0
+    ;call PlatformDebugger@0
     ; !!!!!!FOR DEBUGGIN PLATFORM ARRAY!!!
-    ;
-    Line 0 – Print X and Y
+    
+   ; Line 0 – Print X and Y
     mov dh, 0
     mov dl, 90
     call Gotoxy
