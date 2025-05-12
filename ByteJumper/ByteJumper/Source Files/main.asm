@@ -6,10 +6,10 @@
 
 option casemap:none
 
-INCLUDE Irvine32.inc
-INCLUDELIB Irvine32.lib
-INCLUDELIB kernel32.lib
-INCLUDELIB user32.lib
+INCLUDE C:\Irvine\Irvine32.inc
+INCLUDELIB C:\Irvine\Irvine32.lib
+INCLUDELIB C:\Irvine\Kernel32.lib
+INCLUDELIB C:\Irvine\User32.lib
 
 EXTERN GameStart@0 : near
 EXTERN GameEngine@0 : near

@@ -83,7 +83,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>main</EntryPointSymbol>
       <AdditionalDependencies>Irvine32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Irvine\irvine</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Irvine</AdditionalLibraryDirectories>
     </Link>
     <MASM>
       <AssembledCodeListingFile>

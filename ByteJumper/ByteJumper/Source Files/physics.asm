@@ -1,7 +1,7 @@
-INCLUDE Irvine32.inc
-INCLUDELIB Irvine32.lib
-INCLUDELIB kernel32.lib
-INCLUDELIB user32.lib
+INCLUDE C:\Irvine\Irvine32.inc
+INCLUDELIB C:\Irvine\Irvine32.lib
+INCLUDELIB C:\Irvine\Kernel32.lib
+INCLUDELIB C:\Irvine\User32.lib
 EXTERN ChangeCharAt@0 : PROC
 EXTERN GetCharAt@0 : PROC
 EXTERN GetPlayerXy@0 : PROC

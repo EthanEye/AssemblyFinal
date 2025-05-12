@@ -1,5 +1,5 @@
-INCLUDE Irvine32.inc
-INCLUDELIB Irvine32.lib
+INCLUDE C:\Irvine\Irvine32.inc
+INCLUDELIB C:\Irvine\Irvine32.lib
 
 .data
 timerDisplay     BYTE "Time: ", 0

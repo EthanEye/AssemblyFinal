@@ -2,11 +2,9 @@
 ;GRAPHICS FILE FOR BYTE JUMPER
 ;Purpose Display front end graphics of game including text and textcolor
 ;Title page, how to play page, game over display
-
-
-INCLUDE Irvine32.inc
-INCLUDELIB Irvine32.lib
-INCLUDELIB kernel32.lib 
+INCLUDE C:\Irvine\Irvine32.inc
+INCLUDELIB C:\Irvine\Irvine32.lib
+INCLUDELIB C:\Irvine\Kernel32.lib
 
 extern WriteConsoleW@20 : PROC  ;  declare external WinAPI
 extern GetStdHandle@4 : PROC

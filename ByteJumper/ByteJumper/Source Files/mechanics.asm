@@ -1,8 +1,8 @@
+INCLUDE C:\Irvine\Irvine32.inc
+INCLUDELIB C:\Irvine\Irvine32.lib
+INCLUDELIB C:\Irvine\Kernel32.lib
 
 
-INCLUDE Irvine32.inc
-INCLUDELIB Irvine32.lib
-INCLUDELIB kernel32.lib 
 
 EXTERN WriteConsoleW@20 : PROC  ;  declare external WinAPI
 EXTERN Timer@0 : PROC
@@ -177,8 +177,12 @@ PrintPlayerPos PROC
     ; Platforms Arrays
     mov eax, green
     call SetTextColor
+    
+    ; !!!!!!FOR DEBUGGIN PLATFORM ARRAY!!!
     call PlatformDebugger@0
-    ;Line 0 – Print X and Y
+    ; !!!!!!FOR DEBUGGIN PLATFORM ARRAY!!!
+    ;
+    Line 0 – Print X and Y
     mov dh, 0
     mov dl, 90
     call Gotoxy
