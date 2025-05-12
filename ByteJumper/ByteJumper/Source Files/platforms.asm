@@ -64,6 +64,11 @@ CreatePlatform ENDP
 
 UpdatePlatforms PROC
 push esi
+
+; Clear platforms off screen before values are updated then redrawn
+call ClearPlatforms 
+
+
 ; This function is called when player is jumping to move platforms down
 mov esi, 0
 checkPLoop_:
@@ -79,23 +84,11 @@ mov index, esi
 mov xCoord, eax
 mov yCoord, ebx
 call UpdatePlatformXy
-; Check to see if platform was removed (out of bounds) after updating x y
-mov edx, index
-mov eax, platformsX[edx*4]
-; If it was out of bounds no need to update its position because it was deleted
-cmp eax, 0 
-je skipThisIndex_ 
-
 skipThisIndex_:
 inc esi
 jmp checkPLoop_ 
-
 endCheckPLoop_:
-; Clear and redraw platforms
-Call ArrayCheck
-
-
-
+; Redraw platforms
 pop esi
 ret
 UpdatePlatforms ENDP
@@ -153,11 +146,51 @@ ret
 UpdatePlatformXy ENDP
 
 ; Goes through platform array when play is jumping to delete every platform and redraw it in new location
-ArrayCheck PROC
+ClearPlatforms PROC
+    push esi
+    mov esi, 0
 
+  clearPLoop_:
+    cmp esi, 6
+    jge endClearLoop_   ; once we've done 6 slots, exit
+
+    mov eax, platformsX[esi*4]
+    cmp eax, 0
+    je skipThisOne     ; if this slot is empty, skip
+    
+    mov index, esi
+    
+    call ClearPlatformAtIndex
+    
+skipThisOne:
+    inc esi
+    jmp clearPLoop_    ; go check the next slot
+
+endClearLoop_:
+    pop esi
+    ret
+ClearPlatforms ENDP
+
+ClearPlatformAtIndex PROC
+push esi
+mov edx, index
+
+mov cx, '?'
+call SetNewChar@0
+
+mov esi, 0
+eraseLoop_:
+cmp esi, 6
+je endErase_
+mov eax, platformsX[edx*4]
+mov ebx, platformsY[edx*4]
+call ChangeCharAt@0
+
+
+
+endErase_:
+pop esi
 ret
-ArrayCheck ENDP
-
-
+ClearPlatformAtIndex ENDP
 
 END
