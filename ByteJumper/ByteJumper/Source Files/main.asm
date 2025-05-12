@@ -63,10 +63,8 @@ main PROC
     
 
       gameStart_:
-    ; Game start 
-     ;call Randomize
      call GameStart@0
-     ;call ShowHowToMenu@0
+     call ShowHowToMenu@0
      call GameEngine@0
 
     

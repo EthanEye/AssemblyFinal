@@ -41,54 +41,57 @@ bigText8 BYTE "                /$$  | $$                                        
 bigText9 BYTE "               |  $$$$$$/                                                            | $$", 10,0                    
 bigText10 BYTE "                \______/                                                             |__/", 10,0 
 
-howToPlayDisplay1 BYTE "        .--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--. ", 10,0
-howToPlayDisplay2 BYTE "       / .. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \", 10,0
-howToPlayDisplay3 BYTE "       \ \/\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ \/ /",10,0
-howToPlayDisplay4 BYTE "        \/ /`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'\/ / ",10,0
-howToPlayDisplay5 BYTE "        / /\                                                                                / /\ ",10,0
-howToPlayDisplay6 BYTE "       / /\ \   _    _  ______          __  _______ ____    _____  _           __     __   / /\ \",10,0
-howToPlayDisplay7 BYTE "       \ \/ /  | |  | |/ __ \ \        / / |__   __/ __ \  |  __ \| |        /\\ \   / /   \ \/ /",10,0
-howToPlayDisplay8 BYTE "        \/ /   | |__| | |  | \ \  /\  / /     | | | |  | | | |__) | |       /  \\ \_/ /     \/ / ",10,0
-howToPlayDisplay9 BYTE "        / /\   |  __  | |  | |\ \/  \/ /      | | | |  | | |  ___/| |      / /\ \\   /      / /\ ",10,0
-howToPlayDisplay10 BYTE "       / /\ \  | |  | | |__| | \  /\  /       | | | |__| | | |    | |____ / ____ \| |      / /\ \",10,0
-howToPlayDisplay11 BYTE "       \ \/ /  |_|  |_|\____/   \/  \/        |_|  \____/  |_|    |______/_/    \_\_|      \ \/ /",10,0
-howToPlayDisplay12 BYTE "        \/ /                                                                                \/ / ",10,0
-howToPlayDisplay13 BYTE "        / /\.--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--./ /\ ",10,0
-howToPlayDisplay14 BYTE "       / /\ \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \/\ \",10,0
-howToPlayDisplay15 BYTE "       \ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `' /",10,0
-howToPlayDisplay16 BYTE "        `--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--' ",10,0
+howToPlayDisplay1 BYTE "                .--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--. ",10,0
+howToPlayDisplay2 BYTE "               / .. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \",10,0
+howToPlayDisplay3 BYTE "               \ \/\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ \/ /",10,0
+howToPlayDisplay4 BYTE "                \/ /`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'\/ / ",10,0
+howToPlayDisplay5 BYTE "                / /\                                                                                / /\ ",10,0
+howToPlayDisplay6 BYTE "               / /\ \   _    _  ______          __  _______ ____    _____  _           __     __   / /\ \",10,0
+howToPlayDisplay7 BYTE "               \ \/ /  | |  | |/ __ \ \        / / |__   __/ __ \  |  __ \| |        /\\ \   / /   \ \/ /",10,0
+howToPlayDisplay8 BYTE "                \/ /   | |__| | |  | \ \  /\  / /     | | | |  | | | |__) | |       /  \\ \_/ /     \/ / ",10,0
+howToPlayDisplay9 BYTE "                / /\   |  __  | |  | |\ \/  \/ /      | | | |  | | |  ___/| |      / /\ \\   /      / /\ ",10,0
+howToPlayDisplay10 BYTE "               / /\ \  | |  | | |__| | \  /\  /       | | | |__| | | |    | |____ / ____ \| |      / /\ \",10,0
+howToPlayDisplay11 BYTE "               \ \/ /  |_|  |_|\____/   \/  \/        |_|  \____/  |_|    |______/_/    \_\_|      \ \/ /",10,0
+howToPlayDisplay12 BYTE "                \/ /                                                                                \/ / ",10,0
+howToPlayDisplay13 BYTE "                / /\.--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--..--./ /\ ",10,0
+howToPlayDisplay14 BYTE "               / /\ \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \.. \/\ \",10,0
+howToPlayDisplay15 BYTE "               \ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `'\ `' /",10,0
+howToPlayDisplay16 BYTE "                `--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--'`--' ",10,0
 
-playInstruction1 BYTE "                         __| |____________________________________________| |__",10,0
-playInstruction2 BYTE "                        (__   ____________________________________________   __)",10,0
-playInstruction3a BYTE "                           | |       ",0
-playInstruction3b BYTE "MOVE LEFT: ",0
-playInstruction3c BYTE "A",0
-playInstruction3d BYTE " ||| ",0
-playInstruction3e BYTE "MOVE RIGHT: ",0
-playInstruction3f BYTE "D",0
-playInstruction3g BYTE "       | |",10,0
-playInstruction4a BYTE "                           | |              ",0
-playInstruction4b BYTE "JUMP: ",0
-playInstruction4c BYTE "SPACEBAR",0
-playInstruction4d BYTE "                | |",10,0
-playInstruction5a BYTE "                           | |      ",0
-playInstruction5b BYTE "JUMP ",0
-playInstruction5c BYTE "FROM PLATFORM TO PLATFORM",0
-playInstruction5d BYTE "        | |",10,0
-playInstruction6a BYTE "                           | |     ",0
-playInstruction6b BYTE "FALL ",0
-playInstruction6c BYTE "TO THE GROUND ",0
-playInstruction6d BYTE "=== ",0
-playInstruction6e BYTE "GAME OVER",0
-playInstruction6f BYTE "       | |",10,0
-playInstruction7 BYTE "                           | |                                            | |",10,0
-playInstruction8a BYTE "                           | |              ",0
-playInstruction8b BYTE "PLAY:  ",0
-playInstruction8c BYTE "ENTER",0
-playInstruction8d BYTE "                  | |",10,0
-playInstruction9 BYTE "                         __| |____________________________________________| |__",10,0
-playInstruction10 BYTE "                        (__   ____________________________________________   __)",10,0
-playInstruction11 BYTE "                           | |                                            | |",10,0
+          playInstruction1   BYTE "                                 __| |____________________________________________| |__",10,0
+playInstruction2   BYTE "                                (__   ____________________________________________   __)",10,0
+playInstruction3a  BYTE "                                   | |       ",0
+playInstruction3b  BYTE "MOVE LEFT: ",0
+playInstruction3c  BYTE "A",0
+playInstruction3d  BYTE "|||",0
+playInstruction3e  BYTE "MOVE RIGHT: ",0
+playInstruction3f  BYTE "D",0
+playInstruction3g  BYTE "         | |   ",10,0
+playInstruction4a  BYTE "                                   | |              ",0
+playInstruction4b  BYTE "   JUMP: ",0
+playInstruction4c  BYTE "   SPACEBAR",0
+playInstruction4d  BYTE "          | |",10,0
+playInstruction5a  BYTE "                                   | |      ",0
+playInstruction5b  BYTE "   JUMP ",0
+playInstruction5c  BYTE "   FROM PLATFORM TO PLATFORM",0
+playInstruction5d  BYTE "  | |",10,0
+playInstruction6a  BYTE "                                   | |     ",0
+playInstruction6b  BYTE "FALL ",0
+playInstruction6c  BYTE "TO THE GROUND ",0
+playInstruction6d  BYTE "=== ",0
+playInstruction6e  BYTE "GAME OVER",0
+playInstruction6f  BYTE "       | |",10,0
+playInstruction7   BYTE "                                   | |                                            | |",10,0
+playInstruction8a  BYTE "                                   | |              ",0
+playInstruction8b  BYTE "   PLAY:  ",0
+playInstruction8c  BYTE "   ENTER",0
+playInstruction8d  BYTE "            | |",10,0
+playInstruction9   BYTE "                                 __| |____________________________________________| |__",10,0
+playInstruction10  BYTE "                                (__   ____________________________________________   __)",10,0
+playInstruction11  BYTE "                                   | |                                            | |",10,0
+
+       
+
 
 
 

@@ -102,7 +102,7 @@ call CreatePlatform@0
 mov eax, 25
 mov ebx, 8
 call CreatePlatform@0
-mov eax, 32
+mov eax, 62
 mov ebx, 15
 call CreatePlatform@0
 
@@ -173,18 +173,11 @@ endFill:
     ret
 GetCurrentFrame ENDP
 
-
-
 PrintPlayerPos PROC
     ; Platforms Arrays
     mov eax, green
     call SetTextColor
-
-      
- 
-    ;call PlatformDebugger@0
-  
-
+    call PlatformDebugger@0
     ;Line 0 – Print X and Y
     mov dh, 0
     mov dl, 90
