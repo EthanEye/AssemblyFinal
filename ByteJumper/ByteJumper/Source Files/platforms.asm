@@ -20,6 +20,7 @@ index DWORD 0
 ; mov eax, platformsX[ecx*4]    ; load value
 ; mov platformsX[ecx*4], eax    ; store value
 CreatePlatform PROC
+    push esi
     ; Store new X and Y value (Start of where platform is drawn from)
     mov xCoord, eax
     mov yCoord, ebx
@@ -57,36 +58,45 @@ CreatePlatform PROC
     call ChangeCharAt@0
     jmp pLoop_
     endCreatePlatform_:
+    pop esi
 ret
 CreatePlatform ENDP
 
-
-
-
 UpdatePlatforms PROC
+push esi
 ; This function is called when player is jumping to move platforms down
 mov esi, 0
 checkPLoop_:
-
 cmp esi, 6
 je endCheckPLoop_ 
 ; Check if index is 0
 mov eax, platformsX[esi*4]
-mov ebx, platformsY[esi*4]
 cmp eax, 0
 je skipThisIndex_
+mov ebx, platformsY[esi*4]
 ; If its not zero update the platform at that location
+mov index, esi
 mov xCoord, eax
 mov yCoord, ebx
-; Save index of platforms array
-mov index, esi
 call UpdatePlatformXy
+; Check to see if platform was removed (out of bounds) after updating x y
+mov edx, index
+mov eax, platformsX[edx*4]
+; If it was out of bounds no need to update its position because it was deleted
+cmp eax, 0 
+je skipThisIndex_ 
 
 skipThisIndex_:
 inc esi
 jmp checkPLoop_ 
 
 endCheckPLoop_:
+; Clear and redraw platforms
+Call ArrayCheck
+
+
+
+pop esi
 ret
 UpdatePlatforms ENDP
 
@@ -106,15 +116,11 @@ printLoop:
     ; Add space separator
     mov edx, offset spacer
     call WriteString
-
-
     ; Load and print platformsY[esi]
     mov eax, platformsY[esi*4]
     call WriteInt
-    
     mov edx, offset spacer
     call WriteString
-
     inc esi
     jmp printLoop
 
@@ -129,25 +135,29 @@ UpdatePlatformXy PROC
 mov eax, xCoord 
 mov ebx, yCoord
 mov edx, index
-; Move platform down
 dec ebx
-; Delete plateform if y value is negative
+; Delete plateform if y value is below this number
 cmp ebx, 0
 jle deletePlatform_
+; Update new platform X  and Y
 mov platformsX[edx*4], eax
 mov platformsY[edx*4], ebx
 jmp endUpdateP_
-
 deletePlatform_:
-
+; Deletes from arrays
 mov platformsX[edx*4], 0
 mov platformsY[edx*4], 0
-
-
 endUpdateP_:
 
 ret
 UpdatePlatformXy ENDP
+
+; Goes through platform array when play is jumping to delete every platform and redraw it in new location
+ArrayCheck PROC
+
+ret
+ArrayCheck ENDP
+
 
 
 END

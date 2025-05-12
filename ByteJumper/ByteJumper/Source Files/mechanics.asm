@@ -187,7 +187,7 @@ PrintPlayerPos PROC
 
     ;Line 0 – Print X and Y
     mov dh, 0
-    mov dl, 97
+    mov dl, 90
     call Gotoxy
     mov edx, offset leftPrt
     call WriteString

@@ -341,8 +341,6 @@ UpdatePlayerBody PROC
     skipReplace1_:
 
 ; Update left leg
-  
-
     mov eax, xCoord
     mov ebx, yCoord
     sub ebx, 2
@@ -486,8 +484,6 @@ GravityProc PROC
 
 ret
 GravityProc ENDP
-
-
 
 EndPhysicsThread PROC
 mov physicsThreadRunning, 0
